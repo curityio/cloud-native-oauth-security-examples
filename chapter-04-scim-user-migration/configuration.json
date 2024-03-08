@@ -1,0 +1,7 @@
+{
+    "clientId": "scim-client",
+    "clientSecret": "Password1",
+    "scope": "accounts",
+    "tokenEndpoint": "http://localhost:8443/oauth/v2/oauth-token",
+    "scimEndpoint": "http://localhost:8443/scim/Users"
+}

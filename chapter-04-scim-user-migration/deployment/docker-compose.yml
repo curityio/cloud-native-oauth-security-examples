@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  
+  authorizationserver:
+    image: curity.azurecr.io/curity/idsvr:latest
+    ports:
+     - 6749:6749
+     - 8443:8443
+    environment:
+      PASSWORD: 'Password1'

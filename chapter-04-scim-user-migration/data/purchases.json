@@ -1,0 +1,26 @@
+[
+    {
+        "id": "20881",
+        "customerId": "2099",
+        "country": "USA",
+        "amountUsd": 900,
+        "date": "2024-06-11",
+        "status": "completed"
+    },
+    {
+        "id": "20882",
+        "customerId": "3044",
+        "country": "USA",
+        "amountUsd": 1500,
+        "date": "2024-06-12",
+        "status": "pending"
+    },
+    {
+        "id": "20885",
+        "customerId": "2099",
+        "country": "GBR",
+        "amountUsd": 3000,
+        "date": "2024-06-14",
+        "status": "completed"
+    }
+]

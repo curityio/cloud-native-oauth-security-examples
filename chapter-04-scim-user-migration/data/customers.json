@@ -1,0 +1,35 @@
+[
+    {
+        "id": 2099,
+        "userName": "bob smith",
+        "email": "bob.smith@example.com",
+        "country": "USA",
+        "roles": [
+            "customer"
+        ],
+        "membershipLevel": "gold",
+        "membershipExpires": "2024-10"
+    },
+    {
+        "id": 3044,
+        "userName": "alice roberts",
+        "email": "alice.roberts@example.com",
+        "country": "GBR",
+        "roles": [
+            "customer"
+        ],
+        "membershipLevel": "silver",
+        "membershipExpires": "2025-03"
+    },
+    {
+        "id": 7791,
+        "userName": "frank bennett",
+        "email": "frank.bennett@example.com",
+        "country": "USA",
+        "roles": [
+            "admin"
+        ],
+        "membershipLevel": "none",
+        "membershipExpires": "2025-07"
+    }
+]

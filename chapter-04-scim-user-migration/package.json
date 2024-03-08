@@ -1,0 +1,26 @@
+{
+    "name": "user-migration",
+    "version": "1.0.0",
+    "description": "A SCIM example for migrating user accounts to an authorization server",
+    "author": "Curity AB",
+    "license": "Apache-2.0",
+    "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "migrate": "tsx src/migrate.ts",
+        "list": "tsx --no-warnings src/list.ts",
+        "delete": "tsx src/delete.ts"
+    },
+    "dependencies": {
+        "axios": "^1.6.7",
+        "fs-extra": "^11.1.1"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.1",
+        "@types/node": "^20.11.10",
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.3"
+    }
+}

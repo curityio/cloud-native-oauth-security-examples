@@ -1,0 +1,95 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <environments xmlns="https://curity.se/ns/conf/base">
+    <environment>
+      <services>
+        <service-role>
+          <id>default</id>
+          <endpoints>user_management</endpoints>
+        </service-role>
+      </services>
+    </environment>
+  </environments>
+  <profiles xmlns="https://curity.se/ns/conf/base">
+    <profile>
+      <id>token-service</id>
+      <type xmlns:as="https://curity.se/ns/conf/profile/oauth">as:oauth-service</type>
+      <expose-detailed-error-messages/>
+      <settings>
+        <authorization-server xmlns="https://curity.se/ns/conf/profile/oauth">
+          <scopes>
+            <scope>
+              <id>accounts</id>
+            </scope>
+          </scopes>
+          <client-store>
+            <config-backed>
+              <client>
+                <id>scim-client</id>
+                <client-name>scim-client</client-name>
+                <secret>$5$BEPWnt3xLwddf2uV$3VwRpNIsp/OHBtQjrzalRo.la2hRl672.0t3NDwoju0</secret>
+                <scope>accounts</scope>
+                <capabilities>
+                  <client-credentials/>
+                </capabilities>
+              </client>            
+            </config-backed>
+          </client-store>
+        </authorization-server>
+      </settings>
+    </profile>
+    <profile>
+      <id>user_management</id>
+      <type xmlns:um="https://curity.se/ns/conf/profile/user-management">um:user-management-service</type>
+      <settings>
+        <user-management-service xmlns="https://curity.se/ns/conf/profile/user-management">
+          <api-authentication>
+            <oauth-service>token-service</oauth-service>
+          </api-authentication>
+          <authorization-manager>scim_authorization_manager</authorization-manager>
+          <user-account-data-source>default-datasource</user-account-data-source>
+          <devices-data-source>default-datasource</devices-data-source>
+          <token-data-source>default-datasource</token-data-source>
+          <credential-management>
+            <credential-manager>default-credential-manager</credential-manager>
+          </credential-management>
+        </user-management-service>
+      </settings>
+      <endpoints>
+        <endpoint>
+          <id>user_management</id>
+          <uri>/scim</uri>
+          <endpoint-kind>um-api</endpoint-kind>
+        </endpoint>
+      </endpoints>
+    </profile>    
+  </profiles>
+  <processing xmlns="https://curity.se/ns/conf/base">
+    <account-managers>
+      <account-manager>
+        <id>default-account-manager</id>
+        <enable-registration>
+          <account-verification-method>no-verification</account-verification-method>
+        </enable-registration>
+        <username-is-email>true</username-is-email>
+        <account-data-source>default-datasource</account-data-source>
+      </account-manager>
+    </account-managers>
+    <authorization-managers>
+      <authorization-manager>
+        <id>scim_authorization_manager</id>
+        <scopes xmlns="https://curity.se/ns/conf/authorization-manager/scopes">
+          <policies>
+            <policy>
+              <action xmlns:um="https://curity.se/ns/conf/profile/user-management">um:authorization-actions.user-management.admin</action>
+              <rules>
+                <id>Rule1</id>
+                <scope>accounts</scope>
+                <authorization-decision>allow</authorization-decision>
+              </rules>
+            </policy>
+          </policies>
+        </scopes>
+      </authorization-manager>
+    </authorization-managers>
+  </processing>  
+</config>
