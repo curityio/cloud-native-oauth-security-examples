@@ -1,7 +1,23 @@
 # General
+.settings/
 .DS_Store
 license.json
+*examplecluster*
+*.jar
+*.tar.gz
+download
+*.txt
+
+# Build and Release Folders
+build/
+bin-debug/
+bin-release/
+[Oo]bj/
+[Bb]in/
 node_modules
+dist/
+.idea
+.gradle
 
 # SCIM
 chapter-04-scim-user-migration/data/customers-migrated.json
