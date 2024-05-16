@@ -1,5 +1,7 @@
 # OAuth User Migration
 
+![Apache 2.0 License](https://img.shields.io/github/license/curityio/cloud-native-oauth-security-examples)
+
 When moving to an OAuth architecture, start by designing migration of existing users to the authorization server.\
 This example shows how to perform a migration using the System for Cross-domain Identity Management (SCIM).
 
@@ -168,3 +170,7 @@ Or you can clean all user accounts from the authorization server with this comma
 ```bash
 npm run delete
 ```
+
+## License
+
+This project is copyright &#169; 2024 Curity AB. It is licensed under the [Apache v. 2](../LICENSE).
