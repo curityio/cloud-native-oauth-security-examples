@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zerotrustapi-svc
+spec:
+  selector:
+    app: zerotrustapi
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 8000

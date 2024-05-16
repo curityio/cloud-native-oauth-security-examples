@@ -15,7 +15,8 @@ All examples run on any of the following desktop platforms:
 
 The examples show how to implement the designs describe in the book's chapters:
 
-- [Chapter 04 - User Migration](/chapter-04-scim-user-migration)
+- [Chapter 04 - User Migration](chapter-04-scim-user-migration)
+- [Chapter 05 - Zero-Trust API](chapter-05-secure-api-development)
 
 ## License
 
