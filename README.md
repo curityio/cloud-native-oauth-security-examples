@@ -13,7 +13,9 @@ All examples run on any of the following desktop platforms:
 
 ## List of Examples
 
-- [Chapter 04 - SCIM User Migration](/chapter-04-scim-user-migration)
+The examples show how to implement the designs describe in the book's chapters:
+
+- [Chapter 04 - User Migration](/chapter-04-scim-user-migration)
 
 ## License
 
