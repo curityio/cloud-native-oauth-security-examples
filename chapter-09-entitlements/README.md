@@ -111,12 +111,21 @@ The API queries OPA for the authorization decision. OPA runs as a sidecar on the
 
 ```
 
+### 6. Tear Down the Cluster
+
+Later, when you have finished testing, you can run this command to free resources:
+
+```bash
+export CLUSTER_NAME='entitlements'
+kind delete cluster --name=$CLUSTER_NAME
+```
+
 ## Run an OAuth Client
 
 Run a simple console app client that invokes the system browser:
 
 ```bash
-./6-run-client.sh
+./6-run-oauth-client.sh
 ```
 
 Log in with a username and password using the following test credential:

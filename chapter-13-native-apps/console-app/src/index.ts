@@ -31,7 +31,7 @@ try {
     const orders = await getOrdersList(accessToken);
     console.log(JSON.stringify(orders, null, 2));
 
-    console.log('Console client is calling API to get an order by ID ...');
+    console.log('Console client is calling API to get order details by ID ...');
     const order = await getOrderById('20882', accessToken);
     console.log(JSON.stringify(order, null, 2));
 

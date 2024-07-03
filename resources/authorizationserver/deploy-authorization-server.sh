@@ -68,8 +68,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo 'Waiting for the pods of the authorization server to get ready...'
-
+echo 'Waiting for the pods of the authorization server to reach a ready state ...'
 kubectl wait --namespace authorizationserver \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/name=idsvr \
