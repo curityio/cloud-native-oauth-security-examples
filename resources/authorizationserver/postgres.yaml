@@ -1,0 +1,53 @@
+#####################################################################
+# A basic postgres deployment for the authorization server's database
+#####################################################################
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-svc
+spec:
+  type: NodePort
+  selector:
+    app: postgres
+  ports:
+    - protocol: "TCP"
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          volumeMounts:
+          - mountPath: /docker-entrypoint-initdb.d
+            name: init-script
+            readOnly: true
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: Password1
+            - name: POSTGRES_DB
+              value: idsvr
+          ports:
+            - containerPort: 5432
+              name: postgres
+      volumes:
+        - name: init-script
+          configMap:
+            name: postgres-configmap

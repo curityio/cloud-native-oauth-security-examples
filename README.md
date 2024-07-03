@@ -12,10 +12,18 @@ All examples run on any of the following desktop platforms:
 
 ## List of Examples
 
-The examples show how to implement the designs describe in the book's chapters:
+The examples show how to implement the designs described in book's written text:
 
-- [Chapter 04 - User Migration](chapter-04-scim-user-migration)
-- [Chapter 05 - Zero-Trust API](chapter-05-secure-api-development)
+- [Chapter 04 - OAuth User Migration](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/chapter-04-scim-user-migration)
+- [Chapter 05 - OAuth Secured Zero Trust API](chapter-05-secure-api-development/README.md)
+- [Chapter 08 - API Gateway Extensibility](chapter-08-api-gateway/README.md)
+- [Chapter 09 - Entitlements Deployment](chapter-09-entitlements/README.md)
+
+## Authorization Server
+
+The deployments default to using the free edition of the Curity Identity Server.\
+To use it you must download a license file from the [Curity Developer Portal](https://developer.curity.io/community-edition/).\
+Alternatively, you could adapt deployments to use your preferred authorization server.
 
 ## License
 

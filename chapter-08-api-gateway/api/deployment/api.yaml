@@ -1,0 +1,31 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: minimalapi-svc
+spec:
+  selector:
+    app: minimalapi
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 8000
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: minimalapi
+  labels:
+    app: minimalapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minimalapi
+  template:
+    metadata:
+      labels:
+        app: minimalapi
+    spec:
+      containers:
+      - name: minimalapi
+        image: minimalapi:1.0.0

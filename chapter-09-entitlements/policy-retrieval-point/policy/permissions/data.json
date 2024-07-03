@@ -1,0 +1,14 @@
+{
+    "customer": {
+        "canOwnOrders": true,
+        "canEditPrice": false,
+        "canListOrdersForAllUsers": false,
+        "canListOrdersForRegionalUsers": false
+    },
+    "admin": {
+        "canOwnOrders": false,
+        "canEditPrice": true,
+        "canListOrdersForAllUsers": false,
+        "canListOrdersForRegionalUsers": true
+    }
+}
