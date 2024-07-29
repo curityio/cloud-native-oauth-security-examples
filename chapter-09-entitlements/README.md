@@ -26,7 +26,6 @@ Create a cluster and run a load balancer to enable the API to be exposed on an e
 On Windows, use a `Run as administrator` shell in order to run the load balancer:
 
 ```bash
-export CLUSTER_NAME='entitlements'
 ./1-create-cluster.sh
 ```
 
@@ -37,7 +36,6 @@ On macOS accept the prompt to allow the load balancer to accept connections.\
 Note the external IP address that the script outputs:
 
 ```bash
-export CLUSTER_NAME='entitlements'
 ./2-deploy-api-gateway.sh
 ```
 
@@ -116,8 +114,7 @@ The API queries OPA for the authorization decision. OPA runs as a sidecar on the
 Later, when you have finished testing, you can run this command to free resources:
 
 ```bash
-export CLUSTER_NAME='entitlements'
-kind delete cluster --name=$CLUSTER_NAME
+kind delete cluster --name='example'
 ```
 
 ## Run an OAuth Client
@@ -125,7 +122,7 @@ kind delete cluster --name=$CLUSTER_NAME
 Run a simple console app client that invokes the system browser:
 
 ```bash
-./6-run-oauth-client.sh
+./7-delete-cluster.sh
 ```
 
 Log in with a username and password using the following test credential:

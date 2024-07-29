@@ -6,16 +6,11 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [ "$CLUSTER_NAME" == '' ]; then
-  echo 'A CLUSTER_NAME environment variable must be set before running this script'
-  exit 1
-fi
-
 #
 # First install the KIND cluster
 #
-kind delete cluster --name=$CLUSTER_NAME 2>/dev/null
-kind create cluster --name=$CLUSTER_NAME --config='cluster.yaml'
+kind delete cluster --name='example' 2>/dev/null
+kind create cluster --name='example' --config='cluster.yaml'
 if [ $? -ne 0 ]; then
   echo 'Problem encountered creating the KIND cluster'
   exit 1

@@ -25,7 +25,6 @@ Create a cluster and run a load balancer to enable the API to be exposed on an e
 On Windows, use a `Run as administrator` shell in order to run the load balancer:
 
 ```bash
-export CLUSTER_NAME='gateway-extensibility'
 ./1-create-cluster.sh
 ```
 
@@ -36,7 +35,6 @@ On macOS accept the prompt to allow the load balancer to accept connections.\
 Note the external IP address that the script outputs:
 
 ```bash
-export CLUSTER_NAME='gateway-extensibility'
 ./2-deploy-api-gateway.sh
 ```
 
@@ -99,6 +97,5 @@ kubectl -n kong logs -f $KONG_POD -c proxy
 Run this command to free resources:
 
 ```bash
-export CLUSTER_NAME='gateway-extensibility'
-kind delete cluster --name=$CLUSTER_NAME
+./6-delete-cluster.sh
 ```

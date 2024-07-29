@@ -6,11 +6,6 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [ "$CLUSTER_NAME" == '' ]; then
-  echo 'A CLUSTER_NAME environment variable must be set before running this script'
-  exit 1
-fi
-
 #
 # Create the namespace
 #
@@ -29,7 +24,7 @@ fi
 #
 # Load the docker image into the KIND registry
 #
-kind load docker-image custom-kong:1.0.0 --name $CLUSTER_NAME
+kind load docker-image custom-kong:1.0.0 --name example
 if [ $? -ne 0 ]; then
   echo 'Problem loading the custom Kong docker image into the KIND registry'
   exit 1

@@ -7,11 +7,6 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 cd ../chapter-05-secure-api-development
 
-if [ "$CLUSTER_NAME" == '' ]; then
-  echo 'A CLUSTER_NAME environment variable must be set before running this script'
-  exit 1
-fi
-
 #
 # Build the API's code
 #
