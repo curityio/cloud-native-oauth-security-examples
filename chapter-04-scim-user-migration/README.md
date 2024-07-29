@@ -1,7 +1,5 @@
 # OAuth User Migration
 
-![Apache 2.0 License](https://img.shields.io/github/license/curityio/cloud-native-oauth-security-examples)
-
 When moving to an OAuth architecture, start by designing migration of existing users to the authorization server.\
 This example shows how to perform a migration using the System for Cross-domain Identity Management (SCIM).
 

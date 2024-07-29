@@ -1,0 +1,42 @@
+#######################################################################
+# A Helm values file for the authorization server
+# https://github.com/curityio/idsvr-helm/blob/master/idsvr/values.yaml
+#######################################################################
+
+replicaCount: 2
+
+image:
+  repository: curity.azurecr.io/curity/idsvr
+  tag: latest
+
+curity:
+  adminUiHttp: true
+  admin:
+    logging:
+      level: INFO
+
+  runtime:
+    logging:
+      level: INFO
+    
+  config:
+    uiEnabled: true
+    skipInstall: true
+    encryptionKey: fc32195f576201840ebe1fbd2704c5e40a9a4978a5e0146886743022171e89d7
+    configuration:
+      - configMapRef:
+          name: idsvr-configbackup
+          items:
+            - key: configbackup
+              path: idsvr-config-backup.xml
+    environmentVariableConfigMaps:
+      - idsvr-config-properties
+
+ingress:
+  ingressClassName: kong
+  runtime:
+    enabled: true
+    host: login.examplecluster.com
+  admin:
+    enabled: true
+    host: admin.examplecluster.com
