@@ -1,0 +1,34 @@
+#
+# Exposes the runtime and admin nodes of the authorization server outside the cluster
+#
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: curity-idsvr-admin-virtual-service
+spec:
+  hosts:
+  - admin.democluster.example
+  gateways:
+  - istio-system/default-gateway
+  http:
+  - route:
+    - destination:
+        host: curity-idsvr-admin-svc
+        port:
+          number: 6749
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: curity-idsvr-runtime-virtual-service
+spec:
+  hosts:
+  - login.democluster.example
+  gateways:
+  - istio-system/default-gateway
+  http:
+  - route:
+    - destination:
+        host: curity-idsvr-runtime-svc
+        port:
+          number: 8443

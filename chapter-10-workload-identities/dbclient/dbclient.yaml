@@ -1,0 +1,53 @@
+#
+# A pod that uses the postgres client command line tool
+#
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dbclient
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbclient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbclient
+  template:
+    metadata:
+      labels:
+        app: dbclient
+        spire-managed-dns-identity: 'true'
+        dnsIdentity: dbclient
+    spec:
+      serviceAccountName: dbclient
+      containers:
+      - name: dbclient
+        image: dbclient:v1
+        volumeMounts:
+          - name: svids
+            mountPath: /svids
+      - name: dbclient-spiffehelper
+        image: dbclient-spiffehelper:v1
+        volumeMounts:
+          - name: dbclient-spiffehelper-config
+            mountPath: /service/helper.conf
+            subPath: helper.conf
+            readOnly: true
+          - name: spiffe-workload-api
+            mountPath: /spiffe-workload-api
+            readOnly: true
+          - name: svids
+            mountPath: /svids
+      volumes:
+        - name: spiffe-workload-api
+          csi:
+            driver: "csi.spiffe.io"
+            readOnly: true
+        - name: dbclient-spiffehelper-config
+          configMap:
+            name: dbclient-spiffehelper-config
+        - name: svids
+          emptyDir: {}

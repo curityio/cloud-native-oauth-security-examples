@@ -22,3 +22,9 @@ dist/
 
 # SCIM
 chapter-04-scim-user-migration/data/customers-migrated.json
+
+# Worklaod identities
+chapter-10-workload-identities/base/service-mesh/external-certs/*democluster*
+chapter-10-workload-identities/base/authorizationserver/resources/signing*
+chapter-10-workload-identities/base/authorizationserver/resources/helm-values.yaml
+!chapter-10-workload-identities/demoapi/gradle/wrapper/gradle-wrapper.jar

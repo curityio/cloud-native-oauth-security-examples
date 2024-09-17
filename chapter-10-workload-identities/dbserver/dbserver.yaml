@@ -1,0 +1,76 @@
+#
+# A PostgreSQL database server that uses SPIFFE X509 SVIDs and requires mutual TLS for remote connections
+# Certificate files are retrieved by mounting the SPIFFE workload API, then using the SPIFFE helper utility
+#
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dbserver
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dbserver-svc
+spec:
+  type: NodePort
+  selector:
+    app: dbserver
+  ports:
+    - protocol: "TCP"
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbserver
+  labels:
+    app: dbserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbserver
+  template:
+    metadata:
+      labels:
+        app: dbserver
+        spire-managed-dns-identity: 'true'
+        dnsIdentity: dbserver-svc
+    spec:
+      serviceAccountName: dbserver
+      containers:
+      - name: dbserver
+        image: dbserver:v1
+        env:
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: Password1
+          - name: POSTGRES_DB
+            value: products
+        volumeMounts:
+          - name: svids
+            mountPath: /svids
+      - name: dbserver-spiffehelper
+        image: dbserver-spiffehelper:v1
+        volumeMounts:
+          - name: dbserver-spiffehelper-config
+            mountPath: /service/helper.conf
+            subPath: helper.conf
+            readOnly: true
+          - name: spiffe-workload-api
+            mountPath: /spiffe-workload-api
+            readOnly: true
+          - name: svids
+            mountPath: /svids
+      volumes:
+        - name: spiffe-workload-api
+          csi:
+            driver: "csi.spiffe.io"
+            readOnly: true
+        - name: dbserver-spiffehelper-config
+          configMap:
+            name: dbserver-spiffehelper-config
+        - name: svids
+          emptyDir: {}

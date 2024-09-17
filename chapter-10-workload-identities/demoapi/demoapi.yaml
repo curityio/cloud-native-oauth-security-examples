@@ -1,0 +1,89 @@
+#
+# The API uses transparent HTTPS to be called over HTTPS, and to call other components
+# The API also uses explicit HTTPS to connect to the Postgres database
+#
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demoapi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: demoapi-svc
+spec:
+  selector:
+    app: demoapi
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 8000
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: demoapi
+  labels:
+    app: demoapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demoapi
+  template:
+    metadata:
+      labels:
+        app: demoapi
+        sidecar.istio.io/inject: 'true'
+        spire-managed-dns-identity: 'true'
+        dnsIdentity: demoapi
+      annotations:
+        inject.istio.io/templates: 'sidecar,spire'
+    spec:
+      serviceAccountName: demoapi
+      containers:
+      - name: demoapi
+        image: demoapi:v1
+        env:
+          - name: API_PORT
+            value: '8000'
+          - name: API_DB_CONNECTION
+            value: 'jdbc:postgresql://dbserver-svc/products?sslmode=verify-full&sslfactory=io.spiffe.provider.SpiffeSslSocketFactory'
+          - name: SPIFFE_ENDPOINT_SOCKET
+            value: 'unix:///spiffe-workload-api/socket'
+        volumeMounts:
+          - name: spiffe-workload-api
+            mountPath: /spiffe-workload-api
+            readOnly: true
+      volumes:
+        - name: spiffe-workload-api
+          csi:
+            driver: "csi.spiffe.io"
+            readOnly: true
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: demoapi-mtls
+spec:
+  selector:
+    matchLabels:
+      app: demoapi
+  mtls:
+    mode: STRICT
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: demoapi
+spec:
+  hosts:
+  - api.democluster.example
+  gateways:
+  - istio-system/default-gateway
+  http:
+  - route:
+    - destination:
+        host: demoapi-svc
+        port:
+          number: 8000
