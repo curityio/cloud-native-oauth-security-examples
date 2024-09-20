@@ -1,7 +1,5 @@
 # OAuth Secured Zero Trust API
 
-![Apache 2.0 License](https://img.shields.io/github/license/curityio/cloud-native-oauth-security-examples)
-
 An OAuth secured API that validates a JWT access token and applies claims-based authorization on every request.\
 The example also demonstrates a productive technique for testing API security with mock user-level access tokens.
 

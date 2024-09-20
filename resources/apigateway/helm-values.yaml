@@ -1,0 +1,27 @@
+#
+# Customized values for the Kong gateway from the base file here
+# https://github.com/Kong/charts/blob/main/charts/kong/values.yaml
+#
+
+#
+# A custom Docker image containing the phantom token plugin's dependencies
+#
+image:
+  repository: custom-kong
+  tag: 1.0.0
+
+#
+# Plugins are deployed as configmaps, then applied to one or more routes
+# Files are deployed to the Kong 'proxy' container at these locations:
+# - /opt/kong/plugins/phantom-token
+#
+plugins:
+  configMaps:
+  - pluginName: phantom-token
+    name: curity-phantom-token
+
+#
+# Also provide an NGINX cache for the caching of introspection results
+#
+env:
+  nginx_http_lua_shared_dict: 'phantom-token 10m'

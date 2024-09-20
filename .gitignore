@@ -2,11 +2,12 @@
 .settings/
 .DS_Store
 license.json
+spiffe-helper
 *examplecluster*
 *.jar
 *.tar.gz
 download
-*.txt
+curlresponse.txt
 
 # Build and Release Folders
 build/
