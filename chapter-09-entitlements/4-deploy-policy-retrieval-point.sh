@@ -20,7 +20,7 @@ cd policy-retrieval-point
 # Build the policy bundle
 #
 echo 'Building the OPA policy bundle ...'
-opa build -b policy/
+opa build -b policy/ -o orders_bundle.tar.gz
 if [ $? -ne 0 ]; then
   echo 'Problem encountered building the policy bundle'
   exit 1
@@ -30,8 +30,8 @@ fi
 # Replace configmap
 #
 echo 'Creating a configmap to deploy the OPA policy bundle ...'
-kubectl -n applications create configmap example-policy-bundle \
-  --from-file ./bundle.tar.gz \
+kubectl -n applications create configmap orders-policy-bundle \
+  --from-file ./orders_bundle.tar.gz \
   -o yaml \
   --save-config \
   --dry-run=client | kubectl -n applications apply -f - 
@@ -43,6 +43,6 @@ fi
 #
 # Deploy the server that serves the policy bundle (for dynamic updates of policies)
 #
-kubectl -n applications delete configmap example-policy-bundle --ignore-not-found=true
-kubectl -n applications create configmap example-policy-bundle --from-file ./bundle.tar.gz
+kubectl -n applications delete configmap orders-policy-bundle --ignore-not-found=true
+kubectl -n applications create configmap orders-policy-bundle --from-file ./orders_bundle.tar.gz
 kubectl -n applications apply -f ./deployment.yaml -f ./service.yaml

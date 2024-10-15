@@ -1,4 +1,4 @@
 {
-  "roots": ["orders", "permissions"],
+  "roots": ["system", "orders", "permissions"],
   "rego_version": 1
 }

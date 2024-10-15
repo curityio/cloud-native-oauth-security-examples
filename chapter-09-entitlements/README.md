@@ -242,17 +242,71 @@ POLICY_POD=$(kubectl -n applications get pod -o name | grep 'zerotrustapi')
 kubectl -n applications logs -f $POLICY_POD -c policyengine
 ```
 
-In this deployment, we enabled decision logs in OPA.\
-OPA logs its decisions and the entries include a dump of the request and result.\
-You will see lines similar to the following (abbreviated for readability).\
-This will also show any errors reported by the policy engine, eg if the rego uses an invalid syntax.\
-You can also add [OPA print statements](https://blog.openpolicyagent.org/introducing-the-opa-print-function-809da6a13aee) within rules to output them to logs.
+### Audit Logs
 
+In this deployment, we enabled OPA decision logs, which serve as audit logs for the API authorization.\
+The output is [customized using masking](./policy-retrieval-point/policy/logging.rego) to include some token claims and to avoid logging the JWT access token:
 
 ```json
-{"client_addr":"127.0.0.1:59618","level":"info","msg":"Received request.","req_id":5,"req_method":"POST","req_path":"/v1/data/orders/allow","time":"2024-05-03T08:31:50Z"}
-{"bundles":{"cli1":{}},"decision_id":"e4c9e2d5-88a6-43d5-8520-dfe71726ea2d","input":{"accessToken":"eyJraWQiOiItMzczND...nXUmjxRQbGc0yfu1XpFTErFOrWv-lQ","action":"list","type":"order"},"labels":{"id":"15889e19-8eb1-4c82-8099-b6ec4507aa28","version":"0.64.1"},"level":"info","metrics":{"counter_server_query_cache_hit":0,"timer_rego_external_resolve_ns":1812,"timer_rego_input_parse_ns":69813,"timer_rego_query_compile_ns":74503,"timer_rego_query_eval_ns":557726,"timer_rego_query_parse_ns":55300,"timer_server_handler_ns":835033},"msg":"Decision Log","path":"orders/allow","req_id":5,"requested_by":"127.0.0.1:59618","result":{"allowed":true,"condition":{"customerId":"2099"}},"time":"2024-05-03T08:31:50Z","timestamp":"2024-05-03T08:31:50.00599938Z","type":"openpolicyagent.org/decision_logs"}
+{
+  "bundles": {
+    "policyRetrievalPoint": {}
+  },
+  "decision_id": "f5549793-fc36-4b2f-814e-b304b731d5b6",
+  "erased": [
+    "/input/accessToken"
+  ],
+  "input": {
+    "action": "list",
+    "claims": {
+      "customer_id": "2099",
+      "level_of_assurance": 2,
+      "region": "USA",
+      "roles": [
+        "customer"
+      ],
+      "scope": "openid profile retail/orders"
+    },
+    "type": "order"
+  },
+  "labels": {
+    "id": "2b514d01-c1fe-4c38-b8ae-d360aa1d3d69",
+    "version": "0.69.0"
+  },
+  "level": "info",
+  "masked": [
+    "/input/claims"
+  ],
+  "metrics": {
+    "counter_server_query_cache_hit": 0,
+    "timer_rego_external_resolve_ns": 1172,
+    "timer_rego_input_parse_ns": 63366,
+    "timer_rego_query_compile_ns": 83142,
+    "timer_rego_query_eval_ns": 620485,
+    "timer_rego_query_parse_ns": 60773,
+    "timer_server_handler_ns": 907231
+  },
+  "msg": "Decision Log",
+  "path": "orders/allow",
+  "req_id": 62,
+  "requested_by": "127.0.0.1:34396",
+  "result": {
+    "allowed": true,
+    "condition": {
+      "customerId": "2099"
+    }
+  },
+  "time": "2024-10-15T10:53:10Z",
+  "timestamp": "2024-10-15T10:53:10.255805984Z",
+  "type": "openpolicyagent.org/decision_logs"
+}
 ```
+
+You could log ship the audit logs to a central log aggregation system.\
+You could then run queries to analyze particular types of authorization decisions.
+
+Logging output includes any errors that the policy engine reports.\
+During development you can troubleshoot behavior if you write [OPA print statements](https://blog.openpolicyagent.org/introducing-the-opa-print-function-809da6a13aee), to include debug information in logs.
 
 ### Tear Down the Cluster
 

@@ -6,15 +6,11 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-#
-# First get the license key
-#
-if [ ! -f '../../license.json' ]; then
-  echo '*** Please copy a license.json file for the Curity Identity Server to the chapter-10-workload-identities folder'
+if [ "$LICENSE_FILE_PATH" == '' ]; then
+  echo '*** Please provide a LICENSE_FILE_PATH environment variable for the Curity Identity Server'
   exit 1
 fi
-
-export LICENSE_KEY=$(cat '../../license.json' | jq -r .License)
+export LICENSE_KEY=$(cat $LICENSE_FILE_PATH | jq -r .License)
 if [ "$LICENSE_KEY" == '' ]; then
   echo '*** An invalid license file was provided for the Curity Identity Server'
   exit 1

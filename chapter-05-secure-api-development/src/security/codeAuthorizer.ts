@@ -49,7 +49,7 @@ export class CodeAuthorizer implements Authorizer {
         // Users (e.g. administrators) who can list orders for a region 
         // must login and use strong authentication and can then access an order of their region 
         if (this.rolePermissions.canListOrdersForRegionalUsers(this.claims.roles) &&
-            this.claims.levelOfAssurance === 2 &&
+            this.claims.levelOfAssurance >= 2 &&
             this.claims.region === order.summary.region) {
             
                 return new AuthorizationResult(true);
@@ -66,7 +66,7 @@ export class CodeAuthorizer implements Authorizer {
         // Users who can list orders of a region (e.g. administrators) 
         // must login and use strong authentication and can then access all orders for their region
         if (this.rolePermissions.canListOrdersForRegionalUsers(this.claims.roles) && 
-            this.claims.levelOfAssurance === 2) {
+            this.claims.levelOfAssurance >= 2) {
 
                 return new AuthorizationResult(true, {region: this.claims.region});
         }

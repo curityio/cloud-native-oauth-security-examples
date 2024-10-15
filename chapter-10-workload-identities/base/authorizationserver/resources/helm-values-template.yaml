@@ -41,7 +41,10 @@ curity:
 
     environmentVariableSecrets:
       - idsvr-secureconfig-properties
-    
+
+networkpolicy:
+  enabled: false
+
 ingress:
   runtime:
     enabled: false

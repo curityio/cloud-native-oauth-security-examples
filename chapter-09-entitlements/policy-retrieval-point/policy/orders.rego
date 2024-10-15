@@ -30,6 +30,11 @@ import data.permissions
 default allow["allowed"] := false
 
 #
+# Parse claims from the JWT access token
+#
+claims := io.jwt.decode(input.accessToken)[1]
+
+#
 # Allow users to view individual order details if they are authorized
 #
 allow["allowed"] := can_view_order_details if {
@@ -66,11 +71,6 @@ wants_to_list_orders if {
 	input.action == "list"
 	input.type == "order"
 }
-
-#
-# Parse claims from the JWT access token
-#
-claims := io.jwt.decode(input.accessToken)[1]
 
 #
 # Use a logical OR to represent the conditions that allow a user to access an individual order's details
@@ -116,7 +116,7 @@ can_list_orders if {
 #
 can_list_orders if {
 	has_permission_to_list_regional_orders
-	claims.level_of_assurance == 2
+	claims.level_of_assurance >= 2
 	condition.region
 }
 

@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: policy-retrieval-point
-      name: policy-bundle
+      name: orders-policy-bundle
     spec:
       containers:
       - name: apache2-httpd
@@ -23,8 +23,8 @@ spec:
         volumeMounts:
         - readOnly: true
           mountPath: /usr/local/apache2/htdocs/
-          name: policy-bundle
+          name: orders-policy-volume
       volumes:
-      - name: policy-bundle # Volume for policy files
+      - name: orders-policy-volume
         configMap:
-          name: example-policy-bundle
+          name: orders-policy-bundle

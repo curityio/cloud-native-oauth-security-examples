@@ -101,8 +101,7 @@ In a JWT viewer, this is the payload:
 ## Act as an OAuth Client
 
 Then run a client credentials request over plain HTTP, supplying the above JWT as a client assertion.\
-The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS.\
-The result should be a response that contains OAuth tokens.
+The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS:
 
 ```bash
 SERVICE_ACCOUNT_TOKEN="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
@@ -114,6 +113,9 @@ curl -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/o
      -d 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
      -d 'scope=products'
 ```
+
+The result should be a response that contains OAuth tokens.\
+At the time of writing, the default authorization server needs enhancing before this works.
 
 ## Using JWT SVIDs
 

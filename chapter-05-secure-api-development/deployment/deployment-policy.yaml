@@ -34,12 +34,12 @@ spec:
           - name: 'REQUIRED_SCOPE'
             value: 'retail/orders'
           - name: 'AUTHORIZATION_STRATEGY'
-            value: 'policy' # Enable authorization with OPA
+            value: 'policy'
           - name: 'POLICY_ENDPOINT'
-            value: 'http://127.0.0.1:8181/v1/data/orders/allow' # URL to query policy on OPA
+            value: 'http://127.0.0.1:8181/v1/data/orders/allow'
       initContainers:
       - name: policyengine
-        image: openpolicyagent/opa:latest
+        image: openpolicyagent/opa:0.69.0
         restartPolicy: Always
         args:
           - "run"
@@ -52,7 +52,7 @@ spec:
           - "--set" 
           - "services.policyRetrievalPoint.url=http://policy-retrieval-point-svc" # Base-URL of server hosting the policy bundle
           - "--set"
-          - "bundles.policyRetrievalPoint.resource=bundle.tar.gz" # Path of policy bundle on server
+          - "bundles.policyRetrievalPoint.resource=orders_bundle.tar.gz" # Path of the orders policy bundle on the server
           - "--set"
           - "bundles.policyRetrievalPoint.persist=false" # Keep policy in memory
           - "--v1-compatible"
