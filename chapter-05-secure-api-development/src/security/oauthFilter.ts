@@ -51,10 +51,10 @@ export class OAuthFilter {
      * Validate a JWT according to best practices and then prepare authorization
      */
     public async validateAccessToken(request: Request, response: Response, next: NextFunction): Promise<void> {
-        
+
         const accessToken = this.readAccessToken(request);
         if (!accessToken) {
-            throw new ApiError(401, 'invalid_token', 'Invalid access token received');
+            throw new ApiError(401, 'invalid_token', 'Missing, invalid or expired access token');
         }
 
         const options = {
@@ -71,7 +71,7 @@ export class OAuthFilter {
 
         } catch (ex: any) {
 
-            throw new ApiError(401, 'invalid_token', 'Invalid access token received', ex);
+            throw new ApiError(401, 'invalid_token', 'Missing, invalid or expired access token', ex);
         }
 
         // STEP 2: enforce required scopes

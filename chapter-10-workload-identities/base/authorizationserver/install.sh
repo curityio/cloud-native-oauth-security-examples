@@ -1,0 +1,118 @@
+#!/bin/bash
+
+############################################
+# Deploy a cloud native authorization server
+############################################
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+#
+# First get the license key
+#
+if [ ! -f '../../license.json' ]; then
+  echo '*** Please copy a license.json file for the Curity Identity Server to the chapter-10-workload-identities folder'
+  exit 1
+fi
+
+export LICENSE_KEY=$(cat '../../license.json' | jq -r .License)
+if [ "$LICENSE_KEY" == '' ]; then
+  echo '*** An invalid license file was provided for the Curity Identity Server'
+  exit 1
+fi
+
+#
+# Next generate a config encryption key that is used by both the prepare and deploy scripts
+#
+export CONFIG_ENCRYPTION_KEY=$(openssl rand 32 | xxd -p -c 64)
+
+#
+# Run envsubst to provide the final Helm chart
+#
+envsubst < ./resources/helm-values-template.yaml > resources/helm-values.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the helm-values.yaml file'
+  exit 1
+fi
+
+#
+# Prepare a parameterized configuration that protects secure values
+#
+./protect-secrets.sh
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+#
+# Create a configmap for the database schema of the authorization server
+#
+kubectl -n authorizationserver create configmap postgres-configmap --from-file='resources/postgres-schema.sql'
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the postgres config map'
+  exit 1
+fi
+
+#
+# Deploy the database server
+#
+kubectl -n authorizationserver apply -f resources/postgres.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered deploying the postgres database'
+  exit 1
+fi
+
+#
+# Create a configmap for the authorization server's configuration
+#
+kubectl -n authorizationserver create configmap idsvr-configbackup --from-file='configbackup=./resources/config-backup.xml'
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the XML configuration configmap'
+  exit 1
+fi
+
+#
+# Create service accounts
+#
+kubectl -n authorizationserver apply -f ./resources/service-accounts.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating service accounts for the Curity Identity Server'
+  exit 1
+fi
+
+#
+# Run the Helm Chart to deploy the system
+#
+helm repo add curity https://curityio.github.io/idsvr-helm
+helm repo update
+helm uninstall curity --namespace authorizationserver 2>/dev/null
+helm upgrade --install curity curity/idsvr --values=resources/helm-values.yaml --namespace authorizationserver
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered running the Helm Chart'
+  exit 1
+fi
+
+#
+# Require mTLS for connections to the Curity Identity Server
+#
+kubectl -n authorizationserver apply -f ./resources/mtls.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered enabling mTLS'
+  exit 1
+fi
+
+#
+# Create the Istio ingress for the admin and runtime endpoints
+#
+kubectl -n authorizationserver apply -f ./resources/ingress.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the Istio ingress'
+  exit 1
+fi
+
+#
+# Enable the authorization server to call the Kubernetes JWKS URI so that it can validate service account tokens
+#
+kubectl apply -f ./resources/cluster-security.yaml
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered granting access to the Kubernetes JWKS URI'
+  exit 1
+fi

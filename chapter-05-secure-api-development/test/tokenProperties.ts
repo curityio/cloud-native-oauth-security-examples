@@ -20,7 +20,7 @@
 export class TokenProperties {
     
     // Default to the API's expected issuer
-    public iss = 'https://testissuer.example.com';
+    public iss = 'https://login.example.com';
 
     // Default to the API's expected audience
     public aud = 'api.example.com';

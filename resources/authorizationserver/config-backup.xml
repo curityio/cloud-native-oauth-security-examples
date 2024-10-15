@@ -40,6 +40,7 @@
     <profile>
       <id>authentication-service</id>
       <type xmlns:auth="https://curity.se/ns/conf/profile/authentication">auth:authentication-service</type>
+      <expose-detailed-error-messages/>
       <settings>
         <authentication-service xmlns="https://curity.se/ns/conf/profile/authentication">
           <authenticators>
@@ -89,6 +90,7 @@
     <profile>
       <id>token-service</id>
       <type xmlns:as="https://curity.se/ns/conf/profile/oauth">as:oauth-service</type>
+      <expose-detailed-error-messages/>
       <settings>
         <authorization-server xmlns="https://curity.se/ns/conf/profile/oauth">
           <authentication-service>
@@ -202,7 +204,7 @@
               <value-provided-by>authentication-claims-provider</value-provided-by>
               <transformation>
                 <input-attribute-names>acr</input-attribute-names>
-                <value-transformation-procedure>ZnVuY3Rpb24gdHJhbnNmb3JtKGF0dHJpYnV0ZXMpIHsKCiAgaWYgKGF0dHJpYnV0ZXMuYWNyID09PSAndXJuOnNlOmN1cml0eTphdXRoZW50aWNhdGlvbjpodG1sLWZvcm06aHRtbC1mb3JtJykgewogICAgcmV0dXJuIDI7CiAgfSBlbHNlIHsKICAgIHJldHVybiAxOwogIH0KfQ==</value-transformation-procedure>
+                <value-transformation-procedure>ZnVuY3Rpb24gdHJhbnNmb3JtKGF0dHJpYnV0ZXMpIHsKCiAgaWYgKGF0dHJpYnV0ZXMuYWNyLmluZGV4T2YoJ3Bhc3NrZXknKSAhPT0gLTEpIHsKICAgIHJldHVybiAzOwogIH0gZWxzZSBpZiAoYXR0cmlidXRlcy5hY3IuaW5kZXhPZignaHRtbC1mb3JtJykgIT09IC0xKSB7CiAgICByZXR1cm4gMjsKICB9IGVsc2UgewogICAgcmV0dXJuIDE7CiAgfQp9</value-transformation-procedure>
               </transformation>
             </claim>
             <claim>
@@ -374,7 +376,7 @@
               <client>
                 <id>demo-console-client</id>
                 <no-authentication>true</no-authentication>
-                <redirect-uris>http://127.0.0.1</redirect-uris>
+                <redirect-uris>http://127.0.0.1/callback</redirect-uris>
                 <proof-key>
                   <require-proof-key>true</require-proof-key>
                 </proof-key>
@@ -394,6 +396,50 @@
                 <validate-port-on-loopback-interfaces>false</validate-port-on-loopback-interfaces>
               </client>
               <client>
+                <id>demo-desktop-client</id>
+                <no-authentication>true</no-authentication>
+                <redirect-uris>http://127.0.0.1/callback</redirect-uris>
+                <proof-key>
+                  <require-proof-key>true</require-proof-key>
+                </proof-key>
+                <access-token-ttl>900</access-token-ttl>
+                <refresh-token-ttl>3600</refresh-token-ttl>
+                <audience>demo-desktop-client</audience>
+								<audience>api.example.com</audience>
+                <scope>openid</scope>
+                <scope>profile</scope>
+                <scope>retail/orders</scope>
+                <user-authentication>
+                </user-authentication>
+                <capabilities>
+                  <code>
+                  </code>
+                </capabilities>
+                <validate-port-on-loopback-interfaces>false</validate-port-on-loopback-interfaces>
+              </client>
+              <client>
+                <id>demo-mobile-client</id>
+                <no-authentication>true</no-authentication>
+                <redirect-uris>com.example.demoapp:/callback</redirect-uris>
+                <proof-key>
+                  <require-proof-key>true</require-proof-key>
+                </proof-key>
+                <access-token-ttl>900</access-token-ttl>
+                <refresh-token-ttl>3600</refresh-token-ttl>
+                <audience>demo-mobile-client</audience>
+								<audience>api.example.com</audience>
+                <scope>openid</scope>
+                <scope>profile</scope>
+                <scope>retail/orders</scope>
+                <user-authentication>
+                </user-authentication>
+                <capabilities>
+                  <code>
+                  </code>
+                </capabilities>
+                <validate-port-on-loopback-interfaces>true</validate-port-on-loopback-interfaces>
+              </client>
+              <client>
                 <id>api-gateway-client</id>
                 <secret>$5$UC2SBFz3Ue92dEiz$2fbxYuUG1duENPic7NbE70E9UWxlgmh314bEWZCBUn3</secret>
                 <capabilities>
@@ -410,21 +456,21 @@
               <client>
                 <id>bff-oauth-client</id>
                 <secret>$5$ZGYteVDmh6mv/Ctu$BXaxAqsPoN7dx8ed2A4Jrj9zgDYiztZcJIf1ucmC.B6</secret>
-                <redirect-uris>http://www.webapp.example:3000/</redirect-uris>
+                <redirect-uris>https://www.webapp.example:3000/callback</redirect-uris>
                 <proof-key>
                   <require-proof-key>true</require-proof-key>
                 </proof-key>
                 <access-token-ttl>900</access-token-ttl>
-                <refresh-token-ttl>disabled</refresh-token-ttl>
+                <refresh-token-ttl>3600</refresh-token-ttl>
                 <audience>bff-oauth-client</audience>
                 <audience>api.example.com</audience>
                 <scope>openid</scope>
                 <scope>profile</scope>
                 <scope>retail/orders</scope>
                 <user-authentication>
-                  <allowed-post-logout-redirect-uris>http://www.webapp.example:3000/</allowed-post-logout-redirect-uris>
+                  <allowed-post-logout-redirect-uris>https://www.webapp.example:3000/</allowed-post-logout-redirect-uris>
                 </user-authentication>
-                <allowed-origins>http://www.webapp.example:3000</allowed-origins>
+                <allowed-origins>https://www.webapp.example:3000</allowed-origins>
                 <capabilities>
                   <code>
                   </code>

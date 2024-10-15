@@ -10,7 +10,7 @@ We provide an unsecure password that is easy to remember and type:
 
 | Field | Value |
 | ----- | ----- |
-| Admin URL | `http://admin.examplecluster.com/admin` |
+| Admin URL | `https://admin.democluster.example/admin` |
 | Admin User | admin |
 | Admin Password | Password1 |
 
@@ -20,7 +20,7 @@ Navigate to `Token Service / Clients` to see some example OAuth clients.
 
 Get information about external endpoints using the OpenID Connect discovery endpoint:
 
-- `http://login.examplecluster.com/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
+- `https://login.democluster.example/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
 
 ## Internal URLs
 

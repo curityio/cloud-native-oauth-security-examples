@@ -2,9 +2,9 @@
 
 This example deployment demonstrates the phantom token flow:
 
-- The authorization server is exposed at `http://login.examplecluster.com`
-- The authorization server's admin UI is exposed at `http://admin.examplecluster.com`
-- A minimal API is exposed at `http://api.examplecluster.com/minimalapi`
+- The authorization server is exposed at `https://login.democluster.example`
+- The authorization server's admin UI is exposed at `https://admin.democluster.example`
+- A minimal API is exposed at `https://api.democluster.example/minimalapi`
 - A bash script gets an opaque access token and sends it to the API
 - The minimal API receives a JWT access token
 
@@ -18,6 +18,7 @@ First ensure that you have these tools installed:
 - [kubectl](https://kubernetes.io/docs/tasks/tools)
 - [Helm](https://helm.sh/docs/intro/install)
 - [jq](https://jqlang.github.io/jq/download)
+- [openssl](https://www.openssl.org/)
 
 ### 1. Create the Cluster
 
@@ -41,7 +42,7 @@ Note the external IP address that the script outputs:
 Update your hosts file with the external IP address, similar to the following:
 
 ```text
-172.18.0.5 api.examplecluster.com login.examplecluster.com admin.examplecluster.com
+172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
 ### 3. Deploy the Authorization Server
@@ -54,9 +55,15 @@ export LICENSE_FILE_PATH='license.json'
 ./3-deploy-authorization-server.sh
 ```
 
-- Login to the Admin UI at `http://admin.examplecluster.com/admin` with credentials `admin / Password1`
-- Locate OpenId Connect metadata at `http://login.examplecluster.com/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
+- Login to the Admin UI at `https://admin.democluster.example/admin` with credentials `admin / Password1`
+- Locate OpenId Connect metadata at `https://login.democluster.example/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
 
+To avoid browser SSL trust warnings you can trust the following development root certificate.\
+For example, on macOS use Keychain Access to add it to the system keystore.
+
+```text
+../resources/apigateway/external-certs/democluster.ca.pem
+```
 
 ### 4. Deploy the Minimal API
 
@@ -66,7 +73,7 @@ Deploy the minimal API:
 ./4-deploy-api.sh
 ```
 
-- Locate the API endpoint at `http://api.examplecluster.com/minimalapi`
+- Locate the API endpoint at `https://api.democluster.example/minimalapi`
 
 ### 5. Run an OAuth Client
 
@@ -81,7 +88,7 @@ The script demonstrates that the API receives a JWT access token:
 
 ```text
 Client authenticated and received an opaque access token
-Client succesfully called API: {"message": "API received a JWT access token"}
+Client successfully called API: {"message": "API received a JWT access token"}
 ```
 
 You can also view the logs of the API gateway.\

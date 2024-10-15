@@ -11,8 +11,7 @@ The code also shows how volatile business permissions can be derived from access
 
 ### Security Library
 
-The [panva/jose](https://github.com/panva/jose) `JavaScript Object Signing and Encryption` library is used.\
-The library enables API security best practices to be met with simple code.
+The API uses the [jose](https://github.com/panva/jose) `JavaScript Object Signing and Encryption` library to handle JWTs.
 
 ### Business Logic
 
@@ -35,7 +34,7 @@ The following subsections describe how to configure, run, test and deploy the AP
 
 ### Configure the API
 
-The API uses [environment variables](.env) with the OAuth settings it requires.\
+The API uses [environment variables](.env) that express its required OAuth settings.\
 The API points to its authorization server's JWKS URI to download token signing public keys:
 
 ```bash
@@ -43,7 +42,7 @@ NODE_ENV='development'
 PORT=3000
 JWKS_URI='http://localhost:3001/jwks'
 REQUIRED_JWT_ALGORITHM='ES256'
-REQUIRED_ISSUER='https://testissuer.example.com'
+REQUIRED_ISSUER='https:/login.example.com'
 REQUIRED_AUDIENCE='api.example.com'
 REQUIRED_SCOPE='retail/orders'
 ```
@@ -66,14 +65,14 @@ Every request to the API requires a user level JWT access token:
 curl -i http://localhost:3000/orders -H 'Authorization: Bearer abc123'
 ```
 
-The API will deny access unless a bearer token that passes all security checks is supplied:
+The API denies access unless you supply a JWT access token that passes all security checks:
 
 ```text
 HTTP/1.1 401 Unauthorized
 X-Powered-By: Express
-WWW-Authenticate: Bearer, error=invalid_token, error_description=Invalid access token received
+WWW-Authenticate: Bearer, error=invalid_token, error_description=issing, invalid or expired access token
 
-{"status":401,"code":"invalid_token","message":"Invalid access token received"}
+{"status":401,"code":"invalid_token","message":"issing, invalid or expired access token"}
 ```
 
 ### Test the API
@@ -85,7 +84,7 @@ Run tests with this command, while the API is running in another terminal window
 npm test
 ```
 
-This enables developers to test all security conditions as part of a secure development lifecycle:
+The tests enables developers to test all security conditions frequently as part of their secure development:
 
 ```text
 ✔ A malformed access token results in a 401 status.
@@ -106,11 +105,12 @@ This enables developers to test all security conditions as part of a secure deve
 
 ### Deploy the API
 
-Run the following script to build a Docker image ready for deploying to Kubernetes.\
-When deployed, the API will use configuration that points to a real authorization server.
+The following scripts run when the API runs in end-to-end Kubernetes deployments in later chapters.\
+The API then uses [environment variables](deployment/deployment-code.yaml) that point to a real authorization server.
 
 ```bash
-./build.sh
+./deployment/build.sh
+./deployment/deploy.sh
 ```
 
 ## License

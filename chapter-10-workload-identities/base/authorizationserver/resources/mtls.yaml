@@ -1,0 +1,24 @@
+#
+# Require mTLS for all connections to the authorization server
+#
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: idsvr-admin-mtls
+spec:
+  selector:
+    matchLabels:
+      role: curity-idsvr-admin
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: idsvr-runtime-mtls
+spec:
+  selector:
+    matchLabels:
+      role: curity-idsvr-runtime
+  mtls:
+    mode: STRICT

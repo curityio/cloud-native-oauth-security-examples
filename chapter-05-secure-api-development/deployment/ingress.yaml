@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: kong
   rules:
-    - host: api.examplecluster.com
+    - host: api.democluster.example
       http:
         paths:
           - path: /orders
@@ -17,3 +17,7 @@ spec:
                 name: zerotrustapi-svc
                 port:
                   number: 8000
+  tls:
+  - hosts:
+    - api.democluster.example
+    secretName: external-tls

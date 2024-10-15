@@ -9,8 +9,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #
 # First install the KIND cluster
 #
-kind delete cluster --name='example' 2>/dev/null
-kind create cluster --name='example' --config='cluster.yaml'
+kind delete cluster --name=example 2>/dev/null
+kind create cluster --name=example --config='cluster.yaml'
 if [ $? -ne 0 ]; then
   echo 'Problem encountered creating the KIND cluster'
   exit 1

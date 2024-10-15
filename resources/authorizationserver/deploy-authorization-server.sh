@@ -21,6 +21,7 @@ fi
 #
 kubectl delete namespace authorizationserver 2>/dev/null
 kubectl create namespace authorizationserver
+
 #
 # Deploy a Postgres database used by the authorization server
 # 
@@ -50,10 +51,21 @@ fi
 #
 kubectl -n authorizationserver create configmap idsvr-config-properties \
   --from-literal="LICENSE_KEY=$LICENSE_KEY" \
-  --from-literal="RUNTIME_BASE_URL=http://login.examplecluster.com" \
-  --from-literal="ADMIN_BASE_URL=http://admin.examplecluster.com"
+  --from-literal="RUNTIME_BASE_URL=https://login.democluster.example" \
+  --from-literal="ADMIN_BASE_URL=https://admin.democluster.example"
 if [ $? -ne 0 ]; then
   echo 'Problem encountered creating the authorizationserver secret'
+  exit 1
+fi
+
+#
+# Create the ingress secret in this namespace, so that the authorization server uses the gateway's external TLS certificate
+#
+kubectl -n authorizationserver create secret tls external-tls \
+  --cert=../apigateway/external-certs/democluster.ssl.pem \
+  --key=../apigateway/external-certs/democluster.ssl.key
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
   exit 1
 fi
 

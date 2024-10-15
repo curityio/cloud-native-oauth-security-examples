@@ -11,7 +11,7 @@ RESPONSE_FILE='curlresponse.txt'
 # Use the client credentials grant to get an opaque access token from the authorization server
 #
 TEST_CLIENT_SECRET='WU5r7D2MoPHa1lspOph7'
-HTTP_STATUS=$(curl -s 'http://login.examplecluster.com/oauth/v2/oauth-token' \
+HTTP_STATUS=$(curl -s -k 'https://login.democluster.example/oauth/v2/oauth-token' \
     -H 'content-type: application/x-www-form-urlencoded' \
     -H 'accept: application/json' \
     -d 'client_id=phantom-token-test' \
@@ -30,7 +30,7 @@ echo 'Client authenticated and received an opaque access token'
 #
 # The API gateway translates the opaque token to a JWT, which the API echoes back
 #
-HTTP_STATUS=$(curl -s 'http://api.examplecluster.com/minimalapi' \
+HTTP_STATUS=$(curl -s -k 'https://api.democluster.example/minimalapi' \
     -H 'content-type: application/json' \
     -H 'accept: application/json' \
     -H "authorization: Bearer $OPAQUE_ACCESS_TOKEN" \
@@ -40,4 +40,4 @@ if [ "$HTTP_STATUS" != '200' ]; then
   exit 1
 fi
 JSON="$(cat $RESPONSE_FILE)"
-echo "Client succesfully called API: $JSON"
+echo "Client successfully called API: $JSON"

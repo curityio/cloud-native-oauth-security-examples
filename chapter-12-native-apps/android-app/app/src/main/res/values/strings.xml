@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Demo</string>
+    <string name="app_info">An OAuth secured mobile application using RFC 8252 and PKCE.</string>
+    <string name="app_title">OAuth Mobile Demo Client</string>
+    <string name="call_apis_heading">API Requests</string>
+    <string name="call_apis_info">Send the access token to the OAuth secured API to get example order information.</string>
+    <string name="call_apis_command">Get Orders</string>
+    <string name="call_apis_result">API returned %d orders</string>
+    <string name="claims_heading">ID Token Claims</string>
+    <string name="claims_info">The ID token informs the client how and when authentication took place.</string>
+    <string name="no_claims">No ID token claims issued</string>
+    <string name="page_load_heading">Page Load</string>
+    <string name="page_load_info">The client can determine its authentication status by seeing if tokens exist.</string>
+    <string name="sign_in_heading">Sign In</string>
+    <string name="sign_in_info">Start a login on the integrated system browser and receive the authorization response using a deep link.</string>
+    <string name="sign_in_command">Sign In</string>
+    <string name="sign_out_heading">Sign Out</string>
+    <string name="sign_out_info">Discard tokens and move back to the unauthenticated view.</string>
+    <string name="sign_out_command">Sign Out</string>
+    <string name="status_loading">Page loading ...</string>
+    <string name="status_unauthenticated">You are unauthenticated</string>
+    <string name="status_authenticated">You are authenticated</string>
+    <string name="userinfo_heading">User Info</string>
+    <string name="userinfo_info">Send the access token to the OpenID Connect userinfo endpoint.</string>
+    <string name="userinfo_command">Get User Info</string>
+    <string name="userinfo_result">Authenticated user is: %s</string>
+</resources>

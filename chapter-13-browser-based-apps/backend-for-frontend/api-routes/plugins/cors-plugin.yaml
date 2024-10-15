@@ -1,0 +1,10 @@
+kind: KongPlugin
+apiVersion: configuration.konghq.com/v1
+metadata:
+  name: cors
+plugin: cors
+config:
+  origins:
+  - https://www.webapp.example:3000
+  credentials: true
+  max_age: 86400

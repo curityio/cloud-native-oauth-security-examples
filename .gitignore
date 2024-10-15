@@ -3,7 +3,7 @@
 .DS_Store
 license.json
 spiffe-helper
-*examplecluster*
+*democluster*
 *.jar
 *.tar.gz
 download
@@ -19,6 +19,22 @@ node_modules
 dist/
 .idea
 .gradle
+local.properties
+
+# Swift files
+xcuserdata/
+project.xcworkspace/
+
+# API gateway certificate files
+external-certs/*democluster*
+
+# Files created at deployment time using substitution
+*-subst.yaml
 
 # SCIM
 chapter-04-scim-user-migration/data/customers-migrated.json
+
+## SPIFFE
+chapter-10-workload-identities/base/authorizationserver/resources/signing*
+chapter-10-workload-identities/base/authorizationserver/resources/helm-values.yaml
+!chapter-10-workload-identities/demoapi/gradle/wrapper/gradle-wrapper.jar

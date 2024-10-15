@@ -20,10 +20,11 @@
 
 local access = require "kong.plugins.phantom-token.access"
 
--- See https://github.com/Kong/kong/discussions/7193 for more about the PRIORITY field
+-- Runs after the OAuth Proxy plugin which has priority 1900
+-- https://docs.konghq.com/konnect/reference/plugins/
 local PhantomToken = {
-    PRIORITY = 1000,
-    VERSION = "2.0.0",
+    PRIORITY = 1800,
+    VERSION = "3.0.0",
 }
 
 function PhantomToken:access(conf)

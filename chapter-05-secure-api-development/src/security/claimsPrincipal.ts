@@ -45,7 +45,7 @@ export class ClaimsPrincipal {
         if (scopes.indexOf(requiredScope) === -1) {
 
             const info = `Required scope is '${requiredScope}' and received access token has scope '${this.scope}'`
-            throw new ApiError(403, 'insufficient_scope', 'The access token is not entitled to call this API', info);
+            throw new ApiError(403, 'insufficient_scope', 'The access token cannot be used at this API', info);
         }
     }
 

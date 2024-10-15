@@ -38,11 +38,4 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-#
-# Load the Docker image into KIND's docker registry
-#
-echo "Loading API image into the cluster ..."
-kind load docker-image zerotrustapi:1.0.0 --name example
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+
