@@ -1,0 +1,41 @@
+#
+# A pod that uses a service account token during OAuth requests to the token endpoint
+#
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: oauthclient
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauthclient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauthclient
+  template:
+    metadata:
+      labels:
+        app: oauthclient
+        sidecar.istio.io/inject: 'true'
+        spire-managed-identity: 'true'
+      annotations:
+        inject.istio.io/templates: 'sidecar,spire'
+    spec:
+      serviceAccountName: oauthclient
+      containers:
+      - name: oauthclient
+        image: oauthclient:v1
+        volumeMounts:
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: client-assertion-location
+      volumes:
+      - name: client-assertion-location
+        projected:
+          sources:
+          - serviceAccountToken:
+              path: token
+              expirationSeconds: 3600
+              audience: 'https://login.democluster.example'

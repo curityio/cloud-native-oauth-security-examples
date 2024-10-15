@@ -1,0 +1,8 @@
+kind: KongPlugin
+apiVersion: configuration.konghq.com/v1
+metadata:
+  name: oauth-proxy
+plugin: oauth-proxy
+config:
+  cookie_name_prefix: example
+  encryption_key: $COOKIE_ENCRYPTION_KEY

@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: oauth-agent-svc
+spec:
+  selector:
+    app: oauth-agent
+  ports:
+  - name: http
+    protocol: "TCP"
+    port: 8000

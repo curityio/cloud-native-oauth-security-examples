@@ -32,11 +32,16 @@ curity:
     environmentVariableConfigMaps:
       - idsvr-config-properties
 
+networkpolicy:
+  enabled: false
+
 ingress:
   ingressClassName: kong
   runtime:
     enabled: true
-    host: login.examplecluster.com
+    host: login.democluster.example
+    secretName: external-tls
   admin:
     enabled: true
-    host: admin.examplecluster.com
+    host: admin.democluster.example
+    secretName: external-tls

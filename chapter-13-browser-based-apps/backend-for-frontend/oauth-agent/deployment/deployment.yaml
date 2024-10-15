@@ -1,0 +1,56 @@
+#
+# The OAuth Agent is deployed as a utility stateless API
+#
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: oauth-agent
+  labels:
+    app: oauth-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth-agent
+  template:
+    metadata:
+      labels:
+        app: oauth-agent
+    spec:
+      serviceAccountName: oauth-agent
+      containers:
+      - name: oauth-agent
+        image: oauth-agent:1.0.0
+        env:
+          - name: PORT
+            value: '8000'
+          - name: TRUSTED_WEB_ORIGIN
+            value: 'https://www.webapp.example:3000'
+          - name: ISSUER
+            value: 'https://login.democluster.example/oauth/v2/oauth-anonymous'
+          - name: AUTHORIZE_ENDPOINT
+            value: 'https://login.democluster.example/oauth/v2/oauth-authorize'
+          - name: TOKEN_ENDPOINT
+            value: 'http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-token'
+          - name: LOGOUT_ENDPOINT
+            value: 'https://login.democluster.example/oauth/v2/oauth-session/logout'
+          - name: JWKS_ENDPOINT
+            value: 'http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-anonymous/jwks'
+          - name: ID_TOKEN_ALGORITHM
+            value: 'ES256'
+          - name: CLIENT_ID
+            value: 'bff-oauth-client'
+          - name: CLIENT_SECRET
+            value: 'Password1'
+          - name: REDIRECT_URI
+            value: 'https://www.webapp.example:3000/callback'
+          - name: POST_LOGOUT_REDIRECT_URI
+            value: 'https://www.webapp.example:3000/'
+          - name: SCOPE
+            value: 'retail/orders openid profile'
+          - name: COOKIE_NAME_PREFIX
+            value: 'example'
+          - name: COOKIE_ENCRYPTION_KEY
+            value: $COOKIE_ENCRYPTION_KEY
+          - name: API_COOKIE_BASE_PATH
+            value: /

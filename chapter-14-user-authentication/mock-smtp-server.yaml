@@ -1,0 +1,65 @@
+
+#
+# The maildev SMTP server enables testing emails as any user account
+#
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: smtpserver
+  labels:
+    app: smtpserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smtpserver
+  template:
+    metadata:
+      labels:
+        app: smtpserver
+    spec:
+      containers:
+      - name: smtpserver
+        image: maildev/maildev:latest
+        env:
+        - name: MAILDEV_INCOMING_USER
+          value: 'noreply@democluster.example'
+        - name: MAILDEV_INCOMING_PASSWORD
+          value: 'Password1'
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: smtpserver-svc
+spec:
+  selector:
+    app: smtpserver
+  ports:
+  - name: tcp
+    protocol: TCP
+    port: 1025
+  - name: web
+    protocol: TCP
+    port: 1080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mailbox-ingress
+spec:
+  ingressClassName: kong
+  rules:
+    - host: mail.democluster.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: smtpserver-svc
+                port:
+                  number: 1080
+  tls:
+  - hosts:
+    - mail.democluster.example
+    secretName: external-tls

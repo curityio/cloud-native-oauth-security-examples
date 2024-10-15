@@ -103,11 +103,15 @@ end
 -- Return a generic message for all three of these error categories
 --
 local function unauthorized_error_response()
-    error_response(ngx.HTTP_UNAUTHORIZED, 'unauthorized', 'Missing, invalid or expired access token')
+    error_response(ngx.HTTP_UNAUTHORIZED, 'invalid_token', 'Missing, invalid or expired access token')
 end
 
+--
+-- Return a custom error body while also allowing a CORS plugin to add its response headers
+-- https://github.com/openresty/lua-nginx-module/issues/60
+--
 local function server_error_response(config)
-    error_response(ngx.HTTP_INTERNAL_SERVER_ERROR, 'server_error', 'Problem encountered processing the request')
+    error_response(ngx.HTTP_INTERNAL_SERVER_ERROR, 'server_error', 'Problem encountered processing an API request')
 end
 
 --
@@ -157,7 +161,7 @@ local function introspect_access_token(access_token, config)
         end
     end
 
-    ngx.log(ngx.WARN, 'An opaque token aws successfully introspected')
+    ngx.log(ngx.WARN, 'An opaque token was successfully introspected')
     return { status = result.status, jwt = result.body, expiry = expiry }
 end
 
@@ -260,15 +264,18 @@ function _M.run(config)
     
         if result.status == 500 then
             error_response(ngx.HTTP_INTERNAL_SERVER_ERROR, 'server_error', 'Problem encountered authorizing the HTTP request')
+            return
         end
 
         if result.status == 403 then
             error_response(ngx.HTTP_FORBIDDEN, 'forbidden', 'The token does not contain the required scope')
+            return
         end
 
         if result.status ~= 200 then
             ngx.log(ngx.WARN, 'Received a ' .. result.status .. ' introspection response due to the access token being invalid or expired')
             unauthorized_error_response()
+            return
         end
 
         ngx.req.set_header('Authorization', 'Bearer ' .. result.jwt)
@@ -276,6 +283,7 @@ function _M.run(config)
 
         ngx.log(ngx.WARN, 'No valid access token was found in the HTTP Authorization header')
         unauthorized_error_response()
+        return
     end
 end
 

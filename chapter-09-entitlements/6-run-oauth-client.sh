@@ -5,7 +5,12 @@
 ###########################################################################################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-cd ../chapter-13-native-apps/console-app
+cd ../chapter-12-native-apps/console-app
+
+#
+# Ensure that Node.js trusts the authorization server and API certificates
+#
+export NODE_EXTRA_CA_CERTS='../../resources/apigateway/external-certs/democluster.ca.pem'
 
 #
 # Install dependencies if required
@@ -21,7 +26,7 @@ fi
 #
 # Then run the console app and login to the browser using a pre-shipped user account
 # The console app then calls APIs with its access token
-# - bob / Password1
-# - alice / Password1
+# - dana / Password1
+# - kim / Password1
 #
 npm start

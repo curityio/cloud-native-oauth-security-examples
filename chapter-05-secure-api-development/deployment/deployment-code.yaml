@@ -28,7 +28,7 @@ spec:
           - name: REQUIRED_JWT_ALGORITHM
             value: 'ES256'
           - name: 'REQUIRED_ISSUER'
-            value: 'http://login.examplecluster.com/oauth/v2/oauth-anonymous'
+            value: 'https://login.democluster.example/oauth/v2/oauth-anonymous'
           - name: 'REQUIRED_AUDIENCE'
             value: 'api.example.com'
           - name: 'REQUIRED_SCOPE'

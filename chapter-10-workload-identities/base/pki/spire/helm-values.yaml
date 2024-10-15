@@ -1,0 +1,56 @@
+##################################################################
+# Parameters for the SPIRE Helm chart
+# - https://artifacthub.io/packages/helm/spiffe/spire?modal=values
+#
+# See the main repo to understand all parameters:
+# - https://github.com/spiffe/helm-charts-hardened
+###################################################################
+
+global:
+  spire:
+    clusterName: example
+    trustDomain: democluster.internal
+    caSubject:
+      country: SE
+      organization: example
+      commonName: example-intermediate-ca
+
+spire-server:
+  caKeyType: ec-p256
+  upstreamAuthority:
+    certManager:
+      enabled: true
+      issuer_name: 'intermediate-ca-issuer'
+      issuer_kind: 'ClusterIssuer'
+      issuer_group: 'cert-manager.io'
+
+  controllerManager:
+    identities:
+      clusterSPIFFEIDs:
+      
+        # Disable default and test identities
+        default:
+          enabled: false
+        test-keys:
+          enabled: false
+        
+        # By default, the demo deployment registers a SPIFFE ID for pods that use a 'spire-managed-identity' label
+        default-spiffe-id:
+          spiffeIDTemplate: "spiffe://{{ .TrustDomain }}/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}"
+          podSelector:
+            matchLabels:
+              spire-managed-identity: "true"
+        
+        # For pods that use a 'spire-managed-dns-identity' label, register a DNS identity, with the SPIFE ID in an alternative name
+        dns-spiffe-id:
+          spiffeIDTemplate: "spiffe://{{ .TrustDomain }}/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}"
+          podSelector:
+            matchLabels:
+              spire-managed-dns-identity: "true"
+          dnsNameTemplates: 
+          - "{{ .PodMeta.Labels.dnsIdentity }}"
+
+# Add the socket name that Istio uses to get workload identities
+socketAlternate:
+  names:
+    - workload-socket

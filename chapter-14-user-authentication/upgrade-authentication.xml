@@ -1,0 +1,92 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+   <environments xmlns="https://curity.se/ns/conf/base">
+      <environment>
+         <services>
+            <zones>
+               <default-zone>
+                  <email-provider>smtp</email-provider>
+               </default-zone>
+            </zones>
+         </services>
+      </environment>
+   </environments>
+   <facilities xmlns="https://curity.se/ns/conf/base">
+      <email-providers>
+         <email-provider>
+            <id>smtp</id>
+            <smtp>
+               <smtp-host>smtpserver-svc</smtp-host>
+               <smtp-port>1025</smtp-port>
+               <default-sender>noreply@democluster.example</default-sender>
+               <username>noreply@democluster.example</username>
+               <password>Password1</password>
+            </smtp>
+         </email-provider>
+      </email-providers>
+   </facilities>
+   <profiles xmlns="https://curity.se/ns/conf/base">
+      <profile>
+         <id>authentication-service</id>
+         <type xmlns:auth="https://curity.se/ns/conf/profile/authentication">auth:authentication-service</type>
+         <settings>
+            <authentication-service xmlns="https://curity.se/ns/conf/profile/authentication">
+               <authenticators>
+                  <authenticator>
+                     <id>email</id>
+                     <email>
+                        <account-manager>default-account-manager</account-manager>
+                        <send-otp-as-code />
+                     </email>
+                  </authenticator>
+                  <authenticator>
+                     <id>passkeys</id>
+                     <required-authenticator-for-registration>email</required-authenticator-for-registration>
+                     <passkeys xmlns="https://curity.se/ns/conf/authenticators/passkeys">
+                        <enable-discoverable-credentials>true</enable-discoverable-credentials>
+                        <account-manager>
+                           <id>default-account-manager</id>
+                        </account-manager>
+                     </passkeys>
+                  </authenticator>
+               </authenticators>
+            </authentication-service>
+         </settings>
+      </profile>
+      <profile>
+         <id>token-service</id>
+         <type xmlns:as="https://curity.se/ns/conf/profile/oauth">as:oauth-service</type>
+         <settings>
+            <authorization-server xmlns="https://curity.se/ns/conf/profile/oauth">
+               <client-store>
+                  <config-backed>
+                     <client>
+                        <id>demo-console-client</id>
+                        <user-authentication>
+                           <allowed-authenticators>passkeys</allowed-authenticators>
+                        </user-authentication>
+                     </client>
+                     <client>
+                        <id>demo-desktop-client</id>
+                        <user-authentication>
+                           <allowed-authenticators>passkeys</allowed-authenticators>
+                        </user-authentication>
+                     </client>
+                     <client>
+                        <id>demo-mobile-client</id>
+                        <user-authentication>
+                           <allowed-authenticators>passkeys</allowed-authenticators>
+                        </user-authentication>
+                     </client>
+                     <client>
+                        <id>bff-oauth-client</id>
+                        <user-authentication>
+                           <allowed-authenticators>passkeys</allowed-authenticators>
+                        </user-authentication>
+                     </client>
+                  </config-backed>
+               </client-store>
+            </authorization-server>
+         </settings>
+      </profile>
+   </profiles>
+</config>

@@ -2,9 +2,9 @@
 
 This example deployment provides the following external behaviors for users:
 
-- The authorization server is exposed at `http://login.examplecluster.com`
-- The authorization server's admin UI is exposed at `http://admin.examplecluster.com`
-- An API is exposed from a cluster at `http://api.examplecluster.com/orders`
+- The authorization server is exposed at `https://login.democluster.example`
+- The authorization server's admin UI is exposed at `https://admin.democluster.example`
+- An API is exposed from a cluster at `https://api.democluster.example/orders`
 - A console app is used to perform a login and get a user level access token
 - The console app sends the user level access token to an API to access order information
 
@@ -42,7 +42,7 @@ Note the external IP address that the script outputs:
 Update your hosts file with the external IP address, similar to the following:
 
 ```text
-172.18.0.5 api.examplecluster.com login.examplecluster.com admin.examplecluster.com
+172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
 ### Deploy the Authorization Server
@@ -55,8 +55,15 @@ export LICENSE_FILE_PATH='license.json'
 ./3-deploy-authorization-server.sh
 ```
 
-- Login to the Admin UI at `http://admin.examplecluster.com/admin` with credentials `admin / Password1`
-- Locate OpenId Connect metadata at `http://login.examplecluster.com/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
+- Login to the Admin UI at `https://admin.democluster.example/admin` with credentials `admin / Password1`
+- Locate OpenId Connect metadata at `https://login.democluster.example/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
+
+To avoid browser SSL trust warnings you should trust the following development root certificate.\
+For example, on macOS use Keychain Access to add it to the system keystore.
+
+```text
+../resources/apigateway/external-certs/democluster.ca.pem
+```
 
 ### Deploy the Policy Retrieval Point
 
@@ -70,13 +77,13 @@ The internal URL to the policy retrieval point and policy-bundle is `http://poli
 
 ### Deploy the Example API with OPA
 
-Deploy the example API, running OPA as a sidecar.
+Deploy the example API from [chapter 5](/chapter-05-secure-api-development/), running OPA as a sidecar.
 
 ```bash
 ./5-deploy-api-with-opa.sh
 ```
 
-- Locate the API endpoint at `http://api.examplecluster.com/orders`
+- Locate the API endpoint at `https://api.democluster.example/orders`
 
 The API queries OPA for the authorization decision. OPA runs as a sidecar on the same pod as the API and points to the policy retrieval point to get its policy. The API can communicate with the OPA over its local interface. See an excerpt from the deployment file (`chapter-05-secure-api-development/deployment/kubernetes/deployment.yaml`).
 
@@ -109,20 +116,12 @@ The API queries OPA for the authorization decision. OPA runs as a sidecar on the
 
 ```
 
-### 6. Tear Down the Cluster
-
-Later, when you have finished testing, you can run this command to free resources:
-
-```bash
-kind delete cluster --name='example'
-```
-
 ## Run an OAuth Client
 
 Run a simple console app client that invokes the system browser:
 
 ```bash
-./7-delete-cluster.sh
+./6-run-oauth-client.sh
 ```
 
 Log in with a username and password using the following test credential:
@@ -147,14 +146,6 @@ Console client is calling API to get a list of authorized orders ...
     "status": "completed"
   },
   {
-    "id": "20882",
-    "customerId": "3044",
-    "amountUsd": 1500,
-    "region": "USA",
-    "date": "2024-06-12",
-    "status": "pending"
-  },
-  {
     "id": "20885",
     "customerId": "2099",
     "amountUsd": 3000,
@@ -170,17 +161,17 @@ Problem encountered: status: 404, code: not_found, message: Resource not found f
 Alternatively, you can re-run the client and login with this the following test credential.\
 Both API requests are then authorized, and responses include different authorized data.
 
-- alice / Password1
+- kim / Password1
 
 The authorization rules are based on these data relationships:
 
-- [Bob's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L339) has `customer_id=2099` and `role=customer`.
-- [Alice's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L340) has a `role=admin` and `region=USA`.
-- The client requests an [order with an ID of 20882](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/chapter-13-native-apps/console-app/src/index.ts#L19).
+- [Dana's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L339) has `customer_id=2099` and `role=customer`.
+- [Kims's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L340) has a `role=admin` and `region=USA`.
+- The client requests an [order with an ID of 20882](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/chapter-12-native-apps/console-app/src/index.ts#L19).
 - The [order 20882 resource](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/chapter-05-secure-api-development/data/orderSummary.json#L11) has `customer_id=3044` and `region=USA`.
-- Bob is not authorized to access the order since it is for another customer.
-- Alice is authorized to access the order since she has access to all USA orders.
-- If you edit the client code to request the [order 20881 resource](https://github.com/curityio/cloud-native-oauth-security-examples-internal/blob/main/chapter-05-secure-api-development/data/orderSummary.json#L3), both Bob and Alice are granted access, since Bob owns this USA order.
+- Dana is not authorized to access the order since it is for another customer.
+- Kim is authorized to access the order since she has access to all USA orders.
+- If you edit the client code to request the [order 20881 resource](https://github.com/curityio/cloud-native-oauth-security-examples-internal/blob/main/chapter-05-secure-api-development/data/orderSummary.json#L3), both Dana and Kim are granted access, since Dana owns this USA order.
 
 ## Policy Based Authorization
 
@@ -261,6 +252,14 @@ You can also add [OPA print statements](https://blog.openpolicyagent.org/introdu
 ```json
 {"client_addr":"127.0.0.1:59618","level":"info","msg":"Received request.","req_id":5,"req_method":"POST","req_path":"/v1/data/orders/allow","time":"2024-05-03T08:31:50Z"}
 {"bundles":{"cli1":{}},"decision_id":"e4c9e2d5-88a6-43d5-8520-dfe71726ea2d","input":{"accessToken":"eyJraWQiOiItMzczND...nXUmjxRQbGc0yfu1XpFTErFOrWv-lQ","action":"list","type":"order"},"labels":{"id":"15889e19-8eb1-4c82-8099-b6ec4507aa28","version":"0.64.1"},"level":"info","metrics":{"counter_server_query_cache_hit":0,"timer_rego_external_resolve_ns":1812,"timer_rego_input_parse_ns":69813,"timer_rego_query_compile_ns":74503,"timer_rego_query_eval_ns":557726,"timer_rego_query_parse_ns":55300,"timer_server_handler_ns":835033},"msg":"Decision Log","path":"orders/allow","req_id":5,"requested_by":"127.0.0.1:59618","result":{"allowed":true,"condition":{"customerId":"2099"}},"time":"2024-05-03T08:31:50Z","timestamp":"2024-05-03T08:31:50.00599938Z","type":"openpolicyagent.org/decision_logs"}
+```
+
+### Tear Down the Cluster
+
+When you have finished testing, you can run this command to free resources:
+
+```bash
+./7-delete-cluster.sh
 ```
 
 ### Further Information

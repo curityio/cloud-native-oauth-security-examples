@@ -52,7 +52,7 @@ describe('OAuth API Tests', () => {
     it ('An access token with an invalid issuer results in a 401 status', async () => {
 
         const token = new TokenProperties();
-        token.iss = 'https://malicious-issuer.com'
+        token.iss = 'https://malicious-issuer.example'
 
         const accessToken = await authorizationServer.issueMockAccessToken(token);
         const apiClient = new ApiClient(apiBaseUrl);
@@ -65,7 +65,7 @@ describe('OAuth API Tests', () => {
     it ('An access token with an invalid audience results in a 401 status', async () => {
 
         const token = new TokenProperties();
-        token.aud = 'other.audience.com'
+        token.aud = 'other.audience.example'
 
         const accessToken = await authorizationServer.issueMockAccessToken(token);
         const apiClient = new ApiClient(apiBaseUrl);

@@ -1,0 +1,33 @@
+{
+    "name": "example-spa",
+    "version": "1.0.0",
+    "description": "An example OAuth-secured SPA that uses an API-driven backend for frontend",
+    "author": "Curity AB",
+    "license": "Apache-2.0",
+    "main": "index.ts",
+    "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "clean": "rm -rf dist && mkdir dist && cp index.html app.css config.json dist/",
+        "start": "npm run clean && NODE_OPTIONS='--import tsx' webpack serve --config webpack/webpack.dev.ts",
+        "build": "npm run clean && NODE_OPTIONS='--import tsx' webpack --config webpack/webpack.prod.ts"
+    },
+    "dependencies": {
+        "axios": "^1.7.7",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.2",
+        "@types/react-dom": "^18.3.0",
+        "ts-loader": "^9.5.0",
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.2",
+        "webpack": "^5.94.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4",
+        "webpack-merge": "^6.0.1"
+    }
+}

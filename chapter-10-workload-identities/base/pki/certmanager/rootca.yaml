@@ -1,0 +1,48 @@
+###################################################################################
+# Create a root certificate authority for SPIRE
+# - https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers
+###################################################################################
+
+#
+# Create a self signed issuer for the root CA, in the cert-manager namespace
+#
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+#
+# Issue a root CA as the upstream certificate authority for SPIRE
+#
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-root-ca
+spec:
+  isCA: true
+  duration: 87600h
+  secretName: cluster-root-secret
+  commonName: example-root-ca
+  subject:
+    organizations:
+      - example
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+#
+# Create an issuer of intermediate certificates that uses the root CA
+#
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: intermediate-ca-issuer
+spec:
+  ca:
+    secretName: cluster-root-secret

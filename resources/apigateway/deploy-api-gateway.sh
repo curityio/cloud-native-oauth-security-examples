@@ -31,11 +31,37 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create configmaps containing LUA plugins
+# Create configmaps containing LUA scripts
 #
 kubectl -n kong create configmap curity-phantom-token --from-file='curity-phantom-token/'
 if [ $? -ne 0 ]; then
   echo 'Problem encountered creating the phantom token configmap'
+  exit 1
+fi
+
+kubectl -n kong create configmap curity-oauth-proxy --from-file='curity-oauth-proxy/'
+if [ $? -ne 0 ]; then
+  echo 'Problem encountered creating the oauth-proxy configmap'
+  exit 1
+fi
+
+#
+# Create external SSL certificates in case needed
+#
+./external-certs/create.sh
+if [ $? -ne 0 ]; then
+  echo 'Problem encountered creating external certificates for the API gateway'
+  exit 1
+fi
+
+#
+# Create a secret for the external certificate and key, to match the name in the Helm values file
+#
+kubectl -n kong create secret tls external-tls \
+  --cert=./external-certs/democluster.ssl.pem \
+  --key=./external-certs/democluster.ssl.key
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
   exit 1
 fi
 

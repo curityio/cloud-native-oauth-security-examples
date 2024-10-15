@@ -18,7 +18,7 @@ fi
 #
 # Calculate operating system specific values
 #
-VERSION='0.3.0'
+VERSION='0.4.0'
 if [ "$(uname -m)" == 'arm64' ]; then
   ARCH='arm64'
 else
@@ -67,12 +67,6 @@ fi
 #
 # Run the load balancer, which requires sudo on macOS or a Run as administrator shell on Windows
 #
-HAPROXY=$(docker ps | grep haproxy | awk '{print $1}')
-if [ "$HAPROXY" != '' ]; then
-  echo 'Stopping existing load balancer ...'
-  docker kill $HAPROXY
-fi
-
 if [ "$PLATFORM" == 'darwin' ]; then
   echo 'Grant permissions to cloud-provider-kind to add an IP address to the loopback network interface ...'
   sudo ./cloud-provider-kind

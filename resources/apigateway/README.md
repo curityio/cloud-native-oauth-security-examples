@@ -1,9 +1,8 @@
 # API Gateway Deployment
 
-The API gateway is deployed using the [Kong Helm Chart](https://github.com/Kong/charts).\
-This README provides some useful commands so that you can troubleshoot the API gateway.
+The API gateway is deployed using the [Kong Helm Chart](https://github.com/Kong/charts).
 
-## Service
+## API Gateway Service
 
 Get basic information about Kong services, including its external IP address:
 
@@ -12,7 +11,7 @@ kubectl -n kong get svc/kong-kong-proxy
 kubectl -n kong get svc/kong-kong-proxy -o yaml
 ```
 
-## Workloads
+## API Gateway Workloads
 
 Similarly, get information about pods using commands of this form:
 
@@ -49,7 +48,7 @@ You can get a shell to the proxy container like this:
 kubectl -n kong exec -it kong-kong-5c9c6bdf5-m548v -c proxy -- bash
 ```
 
-The Helm chart deploys plugin files here:
+The Helm chart deploys plugin files at the following location in the API gateway proxy containers:
 
 ```bash
 ls -l /opt/kong/plugins/phantom-token
