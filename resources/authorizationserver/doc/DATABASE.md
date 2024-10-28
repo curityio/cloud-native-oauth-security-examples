@@ -1,6 +1,6 @@
 # Authorization Server Database Setup
 
-The authorization server uses a simplified deployment of a PostgreSQL database from a backup script.\
+The authorization server uses a basic deployment that populates a PostgreSQL database from a SQL backup script.\
 This README provides some useful commands so that you can query the authorization server's data.
 
 ## Service
@@ -53,3 +53,20 @@ select * from accounts;
 select * from delegations;
 select * from tokens;
 ```
+
+## Database High Availability
+
+A real Kubernetes database deployment would also need to meet high availability requirements such as these:
+
+- If you delete the PostgreSQL pod you avoid data loss.
+- If you recreate the cluster you avoid data loss.
+
+Storing database data outside of a Kubernetes cluster is a common way to meet these requirements.\
+You then use a persistent volume that points to the external storage location.\
+This requires a [Kubernetes Storage Class](https://kubernetes.io/docs/concepts/storage/storage-classes/) that supports external storage.
+
+We avoid this type of deployment since it adds complexity and we want to keep the focus on identity rather than database technology.\
+If you are interested in updating our deployments to use external storage, you could do so using the following resources:
+
+- [External Storage Provisioner](https://github.com/kubernetes-sigs/sig-storage-lib-external-provisioner)
+- [Kind Persistent Volumes Tutorial](https://mauilion.dev/posts/kind-pvc/)
