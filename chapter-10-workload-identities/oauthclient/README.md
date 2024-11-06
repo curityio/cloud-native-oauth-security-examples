@@ -101,7 +101,8 @@ In a JWT viewer, this is the payload:
 ## Act as an OAuth Client
 
 Then run a client credentials request over plain HTTP, supplying the above JWT as a client assertion.\
-The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS:
+The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS.\
+The result should be a response that contains OAuth tokens:
 
 ```bash
 SERVICE_ACCOUNT_TOKEN="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
@@ -114,8 +115,9 @@ curl -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/o
      -d 'scope=products'
 ```
 
-The result should be a response that contains OAuth tokens.\
-At the time of writing, the default authorization server needs enhancing before this works.
+At the time of writing, the default authorization server implements client assertions according to the OpenID Connect Core specification.\
+This leads to the error explained in [Best Current Practice for OAuth 2.0 Client Authentication in Workload Environments](https://www.ietf.org/archive/id/draft-ietf-wimse-workload-identity-bcp-01.html#appendix-A-13).\
+There is an active product request to enable usage of the RFC7523 behavior, which will fix this issue.
 
 ## Using JWT SVIDs
 

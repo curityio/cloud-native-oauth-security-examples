@@ -74,7 +74,7 @@ fi
 #
 helm repo add curity https://curityio.github.io/idsvr-helm
 helm repo update
-helm install curity curity/idsvr --values='helm-values.yaml' --namespace authorizationserver
+helm install curity ../../../idsvr-helm/idsvr --values='helm-values.yaml' --namespace authorizationserver
 if [ $? -ne 0 ]; then
   echo 'Problem encountered running the authorization server Helm chart'
   exit 1
