@@ -2,7 +2,6 @@
 .settings/
 .DS_Store
 license.json
-spiffe-helper
 *democluster*
 *.jar
 *.tar.gz

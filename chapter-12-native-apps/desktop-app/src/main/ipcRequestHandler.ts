@@ -119,7 +119,7 @@ export class IpcRequestHandler {
 
         try {
 
-            if (!event.senderFrame.url.startsWith('file:/')) {
+            if (!event.senderFrame?.url.startsWith('file:/')) {
                 throw new ApplicationError('ipc_forbidden', 'The IPC request is unauthorized');
             }
 

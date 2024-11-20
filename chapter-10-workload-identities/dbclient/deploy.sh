@@ -27,17 +27,20 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Build the SPIFFE helper sidecar container
+# Create a configmap for this pod's SPIFFE helper configuration
 #
-./spiffe-helper-sidecar/build.sh
+kubectl -n applications delete configmap dbclient-spiffehelper-config 2>/dev/null
+kubectl -n applications create configmap dbclient-spiffehelper-config --from-file='./helper.conf'
 if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the SPIFFE helper configmap for the dbclient'
   exit 1
 fi
 
 #
-# Deploy the database client pod and its sidecar
+# Deploy the database client pod and its SPIFFE helper sidecar
 #
-kubectl -n applications apply -f dbclient.yaml
+kubectl -n applications delete -f dbclient.yaml 2>/dev/null
+kubectl -n applications apply  -f dbclient.yaml
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered deploying the dbclient pod'
   exit 1

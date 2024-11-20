@@ -29,7 +29,7 @@
         "@types/node": "^20.11.30",
         "@types/react": "^18.3.2",
         "@types/react-dom": "^18.3.0",
-        "electron": "31.6.0",
+        "electron": "^33.2.0",
         "ts-loader": "^9.5.0",
         "tsx": "^4.19.1",
         "typescript": "5.6.2",

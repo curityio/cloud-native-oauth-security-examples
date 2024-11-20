@@ -55,7 +55,7 @@ spec:
       - name: svids
         mountPath: /svids
   - name: dbclient-spiffehelper
-    image: dbclient-spiffehelper:v1
+    image: ghcr.io/spiffe/spiffe-helper:0.8.0
     volumeMounts:
       - name: dbclient-spiffehelper-config
         mountPath: /service/helper.conf

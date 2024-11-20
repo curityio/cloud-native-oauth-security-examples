@@ -20,9 +20,9 @@ spire-server:
   upstreamAuthority:
     certManager:
       enabled: true
-      issuer_name: 'intermediate-ca-issuer'
-      issuer_kind: 'ClusterIssuer'
-      issuer_group: 'cert-manager.io'
+      issuerName: 'intermediate-ca-issuer'
+      issuerKind: 'ClusterIssuer'
+      issuerGroup: 'cert-manager.io'
 
   controllerManager:
     identities:

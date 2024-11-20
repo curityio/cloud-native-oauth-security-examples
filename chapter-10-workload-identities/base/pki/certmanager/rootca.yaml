@@ -4,7 +4,7 @@
 ###################################################################################
 
 #
-# Create a self signed issuer for the root CA, in the cert-manager namespace
+# Create a self signed issuer for the internal root CA, in the cert-manager namespace
 #
 apiVersion: cert-manager.io/v1
 kind: Issuer
@@ -14,7 +14,7 @@ spec:
   selfSigned: {}
 ---
 #
-# Issue a root CA as the upstream certificate authority for SPIRE
+# Issue an internal root CA as the upstream certificate authority for SPIRE
 #
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -37,7 +37,7 @@ spec:
     group: cert-manager.io
 ---
 #
-# Create an issuer of intermediate certificates that uses the root CA
+# Create an issuer of intermediate certificates that uses the internal root CA
 #
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer

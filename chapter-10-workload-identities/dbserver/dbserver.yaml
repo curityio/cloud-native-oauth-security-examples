@@ -39,9 +39,15 @@ spec:
         dnsIdentity: dbserver-svc
     spec:
       serviceAccountName: dbserver
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
       containers:
       - name: dbserver
         image: dbserver:v1
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
         env:
           - name: POSTGRES_USER
             value: postgres
@@ -53,10 +59,16 @@ spec:
           - name: svids
             mountPath: /svids
       - name: dbserver-spiffehelper
-        image: dbserver-spiffehelper:v1
+        image: ghcr.io/spiffe/spiffe-helper:0.8.0
+        args:
+          - -config
+          - /etc/helper.conf
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
         volumeMounts:
           - name: dbserver-spiffehelper-config
-            mountPath: /service/helper.conf
+            mountPath: /etc/helper.conf
             subPath: helper.conf
             readOnly: true
           - name: spiffe-workload-api
