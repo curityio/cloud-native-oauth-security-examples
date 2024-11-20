@@ -23,14 +23,24 @@ spec:
         dnsIdentity: dbclient
     spec:
       serviceAccountName: dbclient
+      securityContext:
+        runAsGroup: 10001
+        runAsUser: 10001
       containers:
       - name: dbclient
         image: dbclient:v1
+        securityContext:
+          {}
         volumeMounts:
           - name: svids
             mountPath: /svids
       - name: dbclient-spiffehelper
-        image: dbclient-spiffehelper:v1
+        image: ghcr.io/spiffe/spiffe-helper:0.8.0
+        args:
+          - -config
+          - /service/helper.conf
+        securityContext:
+          {}
         volumeMounts:
           - name: dbclient-spiffehelper-config
             mountPath: /service/helper.conf

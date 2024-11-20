@@ -14,7 +14,7 @@ kubectl delete namespace cert-manager 2>/dev/null
 #
 # Install cert-manager resources
 #
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered getting cert-manager resources'
   exit 1

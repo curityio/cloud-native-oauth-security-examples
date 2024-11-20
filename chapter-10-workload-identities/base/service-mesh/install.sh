@@ -16,7 +16,7 @@ kubectl delete namespace istio-system 2>/dev/null
 #
 helm repo add istio https://istio-release.storage.googleapis.com/charts
 helm repo update
-ISTIO_VERSION='1.23.0'
+ISTIO_VERSION='1.23.3'
 
 #
 # Install the Istio base system with custom resource definitions
