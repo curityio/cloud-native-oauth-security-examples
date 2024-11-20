@@ -40,13 +40,14 @@ spec:
     spec:
       serviceAccountName: dbserver
       securityContext:
-        runAsGroup: 999
         runAsUser: 999
+        runAsGroup: 999
       containers:
       - name: dbserver
         image: dbserver:v1
         securityContext:
-          {}
+          runAsUser: 999
+          runAsGroup: 999
         env:
           - name: POSTGRES_USER
             value: postgres
@@ -63,7 +64,8 @@ spec:
           - -config
           - /etc/helper.conf
         securityContext:
-          {}
+          runAsUser: 999
+          runAsGroup: 999
         volumeMounts:
           - name: dbserver-spiffehelper-config
             mountPath: /etc/helper.conf

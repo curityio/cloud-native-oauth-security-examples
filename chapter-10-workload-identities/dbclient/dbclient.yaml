@@ -30,7 +30,8 @@ spec:
       - name: dbclient
         image: dbclient:v1
         securityContext:
-          {}
+          runAsGroup: 10001
+          runAsUser: 10001
         volumeMounts:
           - name: svids
             mountPath: /svids
@@ -40,7 +41,8 @@ spec:
           - -config
           - /etc/helper.conf
         securityContext:
-          {}
+          runAsGroup: 10001
+          runAsUser: 10001
         volumeMounts:
           - name: dbclient-spiffehelper-config
             mountPath: /etc/helper.conf
