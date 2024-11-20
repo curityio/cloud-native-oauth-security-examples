@@ -61,12 +61,12 @@ spec:
         image: ghcr.io/spiffe/spiffe-helper:0.8.0
         args:
           - -config
-          - /service/helper.conf
+          - /etc/helper.conf
         securityContext:
           {}
         volumeMounts:
           - name: dbserver-spiffehelper-config
-            mountPath: /service/helper.conf
+            mountPath: /etc/helper.conf
             subPath: helper.conf
             readOnly: true
           - name: spiffe-workload-api

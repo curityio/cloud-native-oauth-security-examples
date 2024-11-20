@@ -31,7 +31,7 @@ fi
 # Create a configmap for this component's SPIFFE helper configuration
 #
 kubectl -n applications delete configmap dbserver-spiffehelper-config 2>/dev/null
-kubectl -n applications create configmap dbserver-spiffehelper-config --from-file='./spiffe-helper.conf'
+kubectl -n applications create configmap dbserver-spiffehelper-config --from-file='./helper.conf'
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered creating the SPIFFE helper configmap for the dbserver'
   exit 1
@@ -40,7 +40,8 @@ fi
 #
 # Deploy the database server pod
 #
-kubectl -n applications apply -f dbserver.yaml
+kubectl -n applications delete -f dbserver.yaml 2>/dev/null
+kubectl -n applications apply  -f dbserver.yaml
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered deploying the database server'
   exit 1
