@@ -84,7 +84,7 @@ The call from the API to the database uses SPIFFE certificates:
 curl -i -k https://api.democluster.example/products
 ```
 
-To call the API inside the cluster, get a shell to the another pod:
+To call the API inside the cluster, get a shell to another pod:
 
 ```bash
 OAUTHCLIENT=$(kubectl -n applications get pods --selector='app=oauthclient' -o=name)
