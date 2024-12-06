@@ -1,7 +1,7 @@
 # Upgrade to Passwordless User Authentication
 
 Follow these steps to harden the user authentication of the book's frontend code examples.\
-First, ensure that you have already deployed the backend components from [chapter 12](../chapter-12-native-apps/README.md).
+First, ensure that you have already deployed the backend components from [chapter 12](../chapter-12-platform-specific-apps/README.md).
 
 ## Deploy an SMTP Server
 
@@ -39,10 +39,10 @@ Select the `Merge` and `Upload` option and then use `Changes / Commit` to save t
 You can then run any of the earlier frontend code examples and sign in using passkeys:
 
 - [Browser-based Application](../chapter-13-browser-based-apps/browser-based-application/README.md)
-- [Console Application](../chapter-12-native-apps/console-app/README.md)
-- [Desktop Application](../chapter-12-native-apps/desktop-app/README.md)
-- [Android Application](../chapter-12-native-apps/android-app/README.md)
-- [iOS Application](../chapter-12-native-apps/ios-app/README.md)
+- [Console Application](../chapter-12-platform-specific-apps/console-app/README.md)
+- [Desktop Application](../chapter-12-platform-specific-apps/desktop-app/README.md)
+- [Android Application](../chapter-12-platform-specific-apps/android-app/README.md)
+- [iOS Application](../chapter-12-platform-specific-apps/ios-app/README.md)
 
 On mobile platforms you may get best results using passkeys on real devices rather than emulators.
 
