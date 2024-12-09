@@ -20,8 +20,8 @@ The examples show how to implement the designs described in the book's written t
 - [Chapter 08 - API Gateway Extensibility](chapter-08-api-gateway/README.md)
 - [Chapter 09 - Entitlements Deployment](chapter-09-entitlements/README.md)
 - [Chapter 10 - Workload Identities](chapter-10-workload-identities/README.md)
-- [Chapter 12 - Native Apps](chapter-12-native-apps/README.md)
-- [Chapter 13 - Browser Based Apps](chapter-13-browser-based-apps/README.md)
+- [Chapter 12 - Platform-Specific Applications](chapter-12-platform-specific-apps/README.md)
+- [Chapter 13 - Browser-Based Applications](chapter-13-browser-based-apps/README.md)
 - [Chapter 14 - User Authentication](chapter-14-user-authentication/README.md)
 
 ## Authorization Server
