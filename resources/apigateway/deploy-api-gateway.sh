@@ -55,22 +55,11 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create external SSL certificates in case needed
+# Create external SSL certificates if required
 #
 ./external-certs/create.sh
 if [ $? -ne 0 ]; then
   echo 'Problem encountered creating external certificates for the API gateway'
-  exit 1
-fi
-
-#
-# Create a secret for the external certificate and key
-#
-kubectl -n kong create secret tls external-tls \
-  --cert=./external-certs/democluster.ssl.pem \
-  --key=./external-certs/democluster.ssl.key
-if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
   exit 1
 fi
 
@@ -108,6 +97,17 @@ kubectl wait --namespace kong \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=app \
   --timeout=90s
+
+#
+# Create a secret for the external certificate and key
+#
+kubectl -n kong create secret tls external-tls \
+  --cert=./external-certs/democluster.ssl.pem \
+  --key=./external-certs/democluster.ssl.key
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
+  exit 1
+fi
 
 #
 # Create base Kubernernetes gateway API resources

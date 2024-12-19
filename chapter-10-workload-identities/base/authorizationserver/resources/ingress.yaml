@@ -1,34 +1,41 @@
-#
-# Exposes the runtime and admin nodes of the authorization server outside the cluster
-#
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: curity-idsvr-admin-virtual-service
+  name: idsvr-runtime-route
+  annotations:
+    konghq.com/preserve-host: 'false'
 spec:
-  hosts:
-  - admin.democluster.example
-  gateways:
-  - istio-system/default-gateway
-  http:
-  - route:
-    - destination:
-        host: curity-idsvr-admin-svc
-        port:
-          number: 6749
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: curity-idsvr-runtime-virtual-service
-spec:
-  hosts:
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
   - login.democluster.example
-  gateways:
-  - istio-system/default-gateway
-  http:
-  - route:
-    - destination:
-        host: curity-idsvr-runtime-svc
-        port:
-          number: 8443
+  rules:
+  - matches:
+    - path:
+        value: /
+    backendRefs:
+    - name: curity-idsvr-runtime-svc
+      kind: Service
+      port: 8443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: idsvr-admin-route
+  annotations:
+    konghq.com/preserve-host: 'false'
+spec:
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - admin.democluster.example
+  rules:
+  - matches:
+    - path:
+        value: /
+    backendRefs:
+    - name: curity-idsvr-admin-svc
+      kind: Service
+      port: 6749

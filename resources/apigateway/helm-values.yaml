@@ -21,7 +21,11 @@ proxy:
 #
 # The chapter 10 deployment adds an Istio sidecar container to gateway pods
 #
-
+podLabels:
+  sidecar.istio.io/inject: 'true'
+  spire-managed-identity: 'true'
+podAnnotations:
+  inject.istio.io/templates: 'sidecar,spire'
 
 #
 # Plugins are deployed as configmaps, then applied to one or more routes
