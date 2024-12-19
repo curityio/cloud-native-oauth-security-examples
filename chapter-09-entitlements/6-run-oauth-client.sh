@@ -5,7 +5,11 @@
 ###########################################################################################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-cd ../chapter-12-native-apps/console-app
+
+#
+# Move to the folder for the console app example
+#
+cd ../chapter-12-platform-specific-apps/console-app
 
 #
 # Ensure that Node.js trusts the authorization server and API certificates

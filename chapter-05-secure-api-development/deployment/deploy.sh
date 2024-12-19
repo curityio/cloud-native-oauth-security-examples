@@ -22,18 +22,6 @@ fi
 kubectl apply -f namespace.yaml
 
 #
-# Create the ingress secret in this namespace, so that the API uses the gateway's external TLS certificate
-#
-kubectl -n applications delete secret external-tls 2>/dev/null
-kubectl -n applications create secret tls external-tls \
-  --cert=../../resources/apigateway/external-certs/democluster.ssl.pem \
-  --key=../../resources/apigateway/external-certs/democluster.ssl.key
-if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
-  exit 1
-fi
-
-#
 # Apply YAML resources
 #
 kubectl -n applications apply -f serviceaccount.yaml
