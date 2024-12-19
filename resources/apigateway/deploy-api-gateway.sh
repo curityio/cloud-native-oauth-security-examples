@@ -31,6 +31,15 @@ if [ $? -ne 0 ]; then
 fi
 
 #
+# Install custom resource definitions for the gateway API
+#
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml
+if [ $? -ne 0 ]; then
+  echo 'Problem encountered installing the Kong Gateway API resource definitions'
+  exit 1
+fi
+
+#
 # Create configmaps containing LUA scripts
 #
 kubectl -n kong create configmap curity-phantom-token --from-file='curity-phantom-token/'
@@ -55,13 +64,27 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create a secret for the external certificate and key, to match the name in the Helm values file
+# Create a secret for the external certificate and key
 #
 kubectl -n kong create secret tls external-tls \
   --cert=./external-certs/democluster.ssl.pem \
   --key=./external-certs/democluster.ssl.key
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
+  exit 1
+fi
+
+#
+# Produce the final Helm values file and activate service mesh settings if required
+#
+if [ "$USE_SERVICE_MESH" == 'true' ]; then
+  export SERVICE_MESH_SETTINGS="$(cat ./service-mesh-settings.yaml)"
+else
+  export SERVICE_MESH_SETTINGS=''
+fi
+envsubst < helm-values-template.yaml > helm-values.yaml 
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the final gateway Helm values file'
   exit 1
 fi
 
@@ -85,6 +108,15 @@ kubectl wait --namespace kong \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=app \
   --timeout=90s
+
+#
+# Create base Kubernernetes gateway API resources
+#
+kubectl apply -f gateway.yaml
+if [ $? -ne 0 ]; then
+  echo 'Problem encountered deploying gateway resources'
+  exit 1
+fi
 
 #
 # Report the external IP address
