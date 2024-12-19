@@ -33,6 +33,9 @@ external-certs/*democluster*
 # SCIM
 chapter-04-scim-user-migration/data/customers-migrated.json
 
+# Gateway
+resources/apigateway/helm-values.yaml
+
 ## SPIFFE
 chapter-10-workload-identities/base/authorizationserver/resources/signing*
 chapter-10-workload-identities/base/authorizationserver/resources/helm-values.yaml

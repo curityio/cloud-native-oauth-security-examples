@@ -2,27 +2,29 @@
 # An ingress into the OpenID Connect userinfo endpoint, using the BFF's hostname
 # The ingress runs plugins that decrypt a cookie and deliver an opaque access token to the authorization server
 #
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: oauthuserinfo-web-route
   annotations:
     konghq.com/plugins: cors,oauth-proxy
-    konghq.com/rewrite: /oauth/v2/oauth-userinfo
 spec:
-  ingressClassName: kong
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - api.webapp.example
   rules:
-    - host: api.webapp.example
-      http:
-        paths:
-          - path: /oauthuserinfo
-            pathType: Prefix
-            backend:
-              service:
-                name: curity-idsvr-runtime-svc
-                port:
-                  number: 8443
-  tls:
-  - hosts:
-    - api.webapp.example
-    secretName: external-tls
+  - matches:
+    - path:
+        value: /oauthuserinfo
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /oauth/v2/oauth-userinfo
+    backendRefs:
+    - name: curity-idsvr-runtime-svc
+      kind: Service
+      port: 8443

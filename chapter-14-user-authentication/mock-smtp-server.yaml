@@ -42,24 +42,21 @@ spec:
     protocol: TCP
     port: 1080
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: mailbox-ingress
+  name: mailbox-route
 spec:
-  ingressClassName: kong
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - mail.democluster.example
   rules:
-    - host: mail.democluster.example
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: smtpserver-svc
-                port:
-                  number: 1080
-  tls:
-  - hosts:
-    - mail.democluster.example
-    secretName: external-tls
+  - matches:
+    - path:
+        value: /
+    backendRefs:
+    - name: smtpserver-svc
+      kind: Service
+      port: 1080

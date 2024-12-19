@@ -165,13 +165,13 @@ Both API requests are then authorized, and responses include different authorize
 
 The authorization rules are based on these data relationships:
 
-- [Dana's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L339) has `customer_id=2099` and `role=customer`.
-- [Kims's user account](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/resources/authorizationserver/data-backup.sql#L340) has a `role=admin` and `region=USA`.
-- The client requests an [order with an ID of 20882](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/chapter-12-native-apps/console-app/src/index.ts#L19).
-- The [order 20882 resource](https://github.com/curityio/cloud-native-oauth-security-examples-internal/tree/main/chapter-05-secure-api-development/data/orderSummary.json#L11) has `customer_id=3044` and `region=USA`.
+- [Dana's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/data-backup.sql#L339) has `customer_id=2099` and `role=customer`.
+- [Kims's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/data-backup.sql#L340) has a `role=admin` and `region=USA`.
+- The client requests an [order with an ID of 20882](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/chapter-12-platform-specific-apps/console-app/src/index.ts#L19).
+- The [order 20882 resource](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/chapter-05-secure-api-development/data/orderSummary.json#L11) has `customer_id=3044` and `region=USA`.
 - Dana is not authorized to access the order since it is for another customer.
 - Kim is authorized to access the order since she has access to all USA orders.
-- If you edit the client code to request the [order 20881 resource](https://github.com/curityio/cloud-native-oauth-security-examples-internal/blob/main/chapter-05-secure-api-development/data/orderSummary.json#L3), both Dana and Kim are granted access, since Dana owns this USA order.
+- If you edit the client code to request the [order 20881 resource](https://github.com/curityio/cloud-native-oauth-security-examples/blob/main/chapter-05-secure-api-development/data/orderSummary.json#L3), both Dana and Kim are granted access, since Dana owns this USA order.
 
 ## Policy Based Authorization
 

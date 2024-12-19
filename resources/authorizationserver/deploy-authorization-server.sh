@@ -59,13 +59,11 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create the ingress secret in this namespace, so that the authorization server uses the gateway's external TLS certificate
+# Create the ingress for the login and admin hostnames
 #
-kubectl -n authorizationserver create secret tls external-tls \
-  --cert=../apigateway/external-certs/democluster.ssl.pem \
-  --key=../apigateway/external-certs/democluster.ssl.key
+kubectl -n authorizationserver apply -f ingress.yaml
 if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the Kubernetes TLS secret for the API gateway'
+  echo '*** Problem encountered creating authorization server ingress resources'
   exit 1
 fi
 

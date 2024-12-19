@@ -12,6 +12,9 @@ curity:
       spire-managed-identity: 'true'
     podAnnotations:
       inject.istio.io/templates: 'sidecar,spire'
+    service:
+      annotations:
+        ingress.kubernetes.io/service-upstream: 'true'
     serviceAccount:
       name: curity-idsvr-admin
     logging:
@@ -23,6 +26,9 @@ curity:
       spire-managed-identity: 'true'
     podAnnotations:
       inject.istio.io/templates: 'sidecar,spire'
+    service:
+      annotations:
+        ingress.kubernetes.io/service-upstream: 'true'
     serviceAccount:
       name: curity-idsvr-runtime
     logging:
@@ -44,9 +50,3 @@ curity:
 
 networkpolicy:
   enabled: false
-
-ingress:
-  runtime:
-    enabled: false
-  admin:
-    enabled: false

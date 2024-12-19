@@ -17,7 +17,7 @@ From a development computer, call it using this URL, which will fail with a data
 curl -i -k http://localhost:3000/products
 ```
 
-## Kubernetes Deployment Settings
+## SPIFFE Settings
 
 The API uses a sidecar managed by Istio, with a SPIRE identity, to require mutual TLS for inbound connections.\
 The API also downloads SPIRE certificates from the workload API, and uses it in outbound JDBC connections.
@@ -65,6 +65,14 @@ spec:
             driver: "csi.spiffe.io"
             readOnly: true
 ```
+
+## Kong, Istio and Internal mTLS
+
+To route incoming API requests from Kong to APIs with mTLS you should be aware of a couple of additional Kong annotations.\
+These ensure that Kong calls the API's ClusterIP address with the internal host name, so that mTLS works:
+
+- Configure `ingress.kubernetes.io/service-upstream: 'true'` against the Kubernetes service.
+- Configure `konghq.com/preserve-host: 'false'` against the Kubernetes HttpRoute.
 
 ## View API Logs
 
