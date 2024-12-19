@@ -115,7 +115,7 @@ See the [API setup](./demoapi/README.md) documentation for details of the config
 ./9-deploy-api.sh
 ```
 
-### 9. Free Resources
+### Free Resources
 
 Finally, once you have finished testing, free resources by running these commands:
 
