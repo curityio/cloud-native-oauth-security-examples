@@ -112,7 +112,7 @@ kubectl wait --namespace kong \
 #
 # Create base Kubernernetes gateway API resources
 #
-kubectl apply -f gateway.yaml
+kubectl -n kong apply -f gateway.yaml
 if [ $? -ne 0 ]; then
   echo 'Problem encountered deploying gateway resources'
   exit 1

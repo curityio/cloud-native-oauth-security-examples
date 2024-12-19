@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: idsvr-runtime-route
+spec:
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - login.democluster.example
+  rules:
+  - matches:
+    - path:
+        value: /
+    backendRefs:
+    - name: curity-idsvr-runtime-svc
+      kind: Service
+      port: 8443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: idsvr-admin-route
+spec:
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - admin.democluster.example
+  rules:
+  - matches:
+    - path:
+        value: /
+    backendRefs:
+    - name: curity-idsvr-admin-svc
+      kind: Service
+      port: 6749

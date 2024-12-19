@@ -34,14 +34,3 @@ curity:
 
 networkpolicy:
   enabled: false
-
-ingress:
-  ingressClassName: kong
-  runtime:
-    enabled: true
-    host: login.democluster.example
-    secretName: external-tls
-  admin:
-    enabled: true
-    host: admin.democluster.example
-    secretName: external-tls
