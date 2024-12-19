@@ -21,7 +21,7 @@ proxy:
 #
 # The chapter 10 deployment adds an Istio sidecar container to gateway pods
 #
-
+$SERVICE_MESH_SETTINGS
 
 #
 # Plugins are deployed as configmaps, then applied to one or more routes

@@ -1,0 +1,43 @@
+#
+# Add gateway API resources to enable HTTPS traffic into the cluster
+#
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: kong
+  annotations:
+    konghq.com/gatewayclass-unmanaged: 'true'
+spec:
+  controllerName: konghq.com/kic-gateway-controller
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong-gateway
+spec:
+  gatewayClassName: kong
+  listeners:
+  - name: https-democluster
+    port: 443
+    protocol: HTTPS
+    hostname: "*.democluster.example"
+    allowedRoutes:
+      namespaces:
+        from: 'All'
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: external-tls
+  - name: https-webapp
+    port: 443
+    protocol: HTTPS
+    hostname: "*.webapp.example"
+    allowedRoutes:
+      namespaces:
+        from: 'All'
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - kind: Secret
+          name: external-tls
