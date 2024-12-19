@@ -1,24 +1,21 @@
 #
 # An ingress to enable routing to the OAuth Agent using the BFF host and a particular path
 #
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: oauth-agent-ingress
+  name: oauth-agent-route
 spec:
-  ingressClassName: kong
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - api.webapp.example
   rules:
-    - host: api.webapp.example
-      http:
-        paths:
-          - path: /oauth-agent
-            pathType: Prefix
-            backend:
-              service:
-                name: oauth-agent-svc
-                port:
-                  number: 8000
-  tls:
-  - hosts:
-    - api.webapp.example
-    secretName: external-tls
+  - matches:
+    - path:
+        value: /oauth-agent
+    backendRefs:
+    - name: oauth-agent-svc
+      kind: Service
+      port: 8000
