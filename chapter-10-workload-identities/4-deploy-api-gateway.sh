@@ -1,8 +1,9 @@
 #!/bin/bash
 
-#############################
-# Deploy the Kong API gateway with a 
-#############################
+##################################################################################
+# Deploy the Kong API gateway and add a service mesh sidecar to the gateway pods
+# This enables the gateway pods to initiate mTLS connections to upstream workloads
+##################################################################################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
