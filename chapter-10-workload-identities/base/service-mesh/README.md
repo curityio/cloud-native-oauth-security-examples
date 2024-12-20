@@ -1,7 +1,7 @@
 # Service Mesh
 
 The service mesh provides productivity features for applications.\
-This includes an API gateway and a sidecar that automate the use of Mutual TLS.
+This includes sidecars that automate the use of Mutual TLS.
 
 ## Sidecar Injection
 
