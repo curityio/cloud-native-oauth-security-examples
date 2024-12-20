@@ -1,27 +1,24 @@
 #
-# An ingress into the orders API, using the BFF's hostname
-# The ingress runs plugins that decrypt a cookie and ultimately deliver a JWT access token to the API
+# An ingress route into the orders API, using the BFF's hostname
+# The route runs plugins that decrypt a cookie and ultimately deliver a JWT access token to the API
 #
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: orders-api-web-route
   annotations:
     konghq.com/plugins: cors,oauth-proxy,phantom-token
 spec:
-  ingressClassName: kong
+  parentRefs:
+  - name: kong-gateway
+    namespace: kong
+  hostnames:
+  - api.webapp.example
   rules:
-    - host: api.webapp.example
-      http:
-        paths:
-          - path: /orders
-            pathType: Prefix
-            backend:
-              service:
-                name: zerotrustapi-svc
-                port:
-                  number: 8000
-  tls:
-  - hosts:
-    - api.webapp.example
-    secretName: external-tls
+  - matches:
+    - path:
+        value: /orders
+    backendRefs:
+    - name: zerotrustapi-svc
+      kind: Service
+      port: 8000

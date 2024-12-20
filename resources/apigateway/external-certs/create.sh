@@ -1,9 +1,9 @@
 #!/bin/bash
 
-################################################################################
+############################################################################
 # Create external ingress certificates for a development cluster
-# In a real setup you would use real certificates, such as from a cloud platform
-################################################################################
+# In a real setup you would use real certificates, such as from Lets Encrypt
+############################################################################
 
 #
 # Ensure that we are in the folder containing this script

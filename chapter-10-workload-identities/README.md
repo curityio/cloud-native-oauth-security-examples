@@ -40,17 +40,24 @@ See the [PKI setup](./base/pki/README.md) documentation for details.
 ./2-deploy-pki.sh
 ```
 
-### 3. Deploy the Service Mesh and API gateway
+### 3. Deploy the Service Mesh
 
-Next, deploy the Istio service mesh, which provides its own API gateway.\
-This gateway can initiate mTLS connections when routing to upstream components.\
+Next, deploy the Istio service mesh, to enable transparent mTLS inside the cluster.\
 See the [Service mesh setup](./base/service-mesh/README.md) for details on the Istio SPIRE integration.
 
 ```bash
 ./3-deploy-service-mesh.sh
 ```
 
-The script will output the external IP address of the API gateway with a line similar to this:
+### 4. Deploy the API Gateway
+
+Next deploy the Kong API gateway to enable ingress into the cluster:
+
+```bash
+./4-deploy-api-gateway.sh
+```
+
+The script outputs the external IP address of the API gateway with a line similar to this:
 
 ```text
 The cluster's external IP address is 172.19.0.5 ...
@@ -62,56 +69,56 @@ Add these entries to your computer's `/etc/hosts` file for that IP address:
 172.19.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
-### 4. Deploy the Authorization Server
+### 5. Deploy the Authorization Server
 
 Next deploy the Curity Identity Server as the authorization server.\
 See the [authorization server setup](./base/authorizationserver/README.md) documentation for details of the configuration.
 
 ```bash
-./4-deploy-authorization-server.sh
+./5-deploy-authorization-server.sh
 ```
 
-### 5. Run an OAuth Client that uses a JWT as a Client Credential
+### 6. Run an OAuth Client that uses a JWT as a Client Credential
 
 Next deploy a test workload which will use a Kubernetes service account token as an OAuth client credential.\
 See the [oauth client setup](./oauthclient/README.md) documentation for details of how connections work.
 
 ```bash
-./5-deploy-oauthclient.sh
+./6-deploy-oauthclient.sh
 ```
 
-### 6. Run a Database Server that accepts X509 Credentials
+### 7. Run a Database Server that accepts X509 Credentials
 
 First, run this command to deploy a postgres database server configured to use Mutual TLS with SPIRE X509 SVIDs.\
 See the [database server setup](./dbserver/README.md) documentation for details of the configuration.
 
 ```bash
-./6-deploy-dbserver.sh
+./7-deploy-dbserver.sh
 ```
 
-### 7. Run a Database Client that uses an X509 Database Credential
+### 8. Run a Database Client that uses an X509 Database Credential
 
 Next, run this command to deploy a postgres database client that will connect to the database server.\
 See the [database client setup](./dbclient/README.md) documentation for details of the configuration.
 
 ```bash
-./7-deploy-dbclient.sh
+./8-deploy-dbclient.sh
 ```
 
-### 8. Run an API that uses an X509 Database Credential
+### 9. Run an API that uses an X509 Database Credential
 
 Finally, run this command to deploy a simple REST API that makes a JDBC connection to the database server.\
 To build and deploy the API you must have a Java 21 SDK installed.\
 See the [API setup](./demoapi/README.md) documentation for details of the configuration.
 
 ```bash
-./8-deploy-api.sh
+./9-deploy-api.sh
 ```
 
-### 9. Free Resources
+### Free Resources
 
 Finally, once you have finished testing, free resources by running these commands:
 
 ```bash
-./9-delete-cluster.sh
+./delete-cluster.sh
 ```

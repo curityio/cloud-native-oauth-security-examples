@@ -9,7 +9,6 @@ local cipher = require 'resty.openssl.cipher'
 
 local GCM_IV_SIZE     = 12
 local GCM_TAG_SIZE    = 16
-local CURRENT_VERSION = 1
 
 local function array_has_value(arr, val)
     for index, value in ipairs(arr) do

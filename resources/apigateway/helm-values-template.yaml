@@ -10,9 +10,18 @@ image:
   repository: custom-kong
   tag: 1.0.0
 
-ingressController:
-  env:
-    feature_gates: RewriteURIs=true
+#
+# Load balance the gateway and disable plain HTTP requests
+#
+replicaCount: 2
+proxy:
+  http:
+    enabled: false
+
+#
+# The chapter 10 deployment adds an Istio sidecar container to gateway pods
+#
+$SERVICE_MESH_SETTINGS
 
 #
 # Plugins are deployed as configmaps, then applied to one or more routes
@@ -26,12 +35,6 @@ plugins:
     name: curity-oauth-proxy
   - pluginName: phantom-token
     name: curity-phantom-token
-
-#
-# Override the default SSL certificate that Kong generates
-#
-secretVolumes:
-- external-tls
 
 #
 # Also provide an NGINX cache for the caching of introspection results

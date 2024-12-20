@@ -1,51 +1,22 @@
 #########################################################################################
-# Parameters for the istiod Helm chart
+# Parameters for the istiod Helm chart, which injects sidecars into workloads
 # - https://artifacthub.io/packages/helm/istio-official/istiod?modal=values
 #
-# Implement the techniques from the istio-spire-config.yaml file:
+# Implement the technique from the istio-spire-config.yaml file:
 # - https://github.com/istio/istio/tree/master/samples/security/spire
 #
 # - Set the trust domain for the mesh
 # - Mount the SPIFFE CSI driver so that sidecars and the gateway receive SVIDs from SPIRE
 #########################################################################################
-defaults:
-  meshConfig:
-    trustDomain: democluster.internal
+meshConfig:
+  trustDomain: democluster.internal
 
-  sidecarInjectorWebhook:
-    templates:
-      spire: |
-        spec:
-          volumes:
-            - name: workload-socket
-              csi:
-                driver: "csi.spiffe.io"
-                readOnly: true
-      spire-gw: |
-        spec:
-          volumes:
-            - name: workload-socket
-              emptyDir: null
-              csi:
-                driver: "csi.spiffe.io"
-                readOnly: true
-          initContainers:
-          - name: wait-for-spire-socket
-            image: busybox:1.28
-            volumeMounts:
-              - name: workload-socket
-                mountPath: /var/run/secrets/workload-spiffe-uds
-                readOnly: true
-            env:
-              - name: CHECK_FILE
-                value: /var/run/secrets/workload-spiffe-uds/socket
-            command:
-              - sh
-              - "-c"
-              - |-
-                echo "$(date -Iseconds)" Waiting for: $${CHECK_FILE}
-                while [[ ! -e $${CHECK_FILE} && ! -L $${CHECK_FILE} ]] ; do
-                  echo "$(date -Iseconds)" File does not exist: $${CHECK_FILE}
-                  sleep 15
-                done
-                ls -l $${CHECK_FILE}
+sidecarInjectorWebhook:
+  templates:
+    spire: |
+      spec:
+        volumes:
+          - name: workload-socket
+            csi:
+              driver: "csi.spiffe.io"
+              readOnly: true

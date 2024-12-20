@@ -1,0 +1,5 @@
+podLabels:
+  sidecar.istio.io/inject: 'true'
+  spire-managed-identity: 'true'
+podAnnotations:
+  inject.istio.io/templates: 'sidecar,spire'
