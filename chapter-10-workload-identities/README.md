@@ -69,6 +69,13 @@ Add these entries to your computer's `/etc/hosts` file for that IP address:
 172.19.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
+To avoid browser SSL trust warnings you can trust the following development root certificate.\
+For example, on macOS use Keychain Access to add it to the system keystore.
+
+```text
+../resources/apigateway/external-certs/democluster.ca.pem
+```
+
 ### 5. Deploy the Authorization Server
 
 Next deploy the Curity Identity Server as the authorization server.\
