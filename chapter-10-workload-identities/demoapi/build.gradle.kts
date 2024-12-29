@@ -18,7 +18,7 @@ dependencies {
     
     // Postgres and SPIFFE dependencies
     runtimeOnly("org.postgresql:postgresql:42.7.2")
-    runtimeOnly("io.spiffe:java-spiffe-provider:0.8.6")
+    runtimeOnly("io.spiffe:java-spiffe-provider:0.8.11")
 }
 
 java {

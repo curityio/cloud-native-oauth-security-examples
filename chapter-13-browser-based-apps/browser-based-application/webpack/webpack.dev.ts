@@ -21,14 +21,22 @@ import {merge} from 'webpack-merge';
 import baseConfig from './webpack.common.js';
 
 /*
- * A pure SPA experience is used for web development, using a lightweight static server
+ * During development the app uses a lightweight web host and sets strong security headers
+ * Equivalent headers would later be set when the SPA is deployed to a remote web host
  */
-const dirname = process.cwd();
-let devConfig: webpack.Configuration = {
-    mode: 'development',
-};
+let policy = "default-src 'none';";
+policy += " script-src 'self';";
+policy += " connect-src 'self' https://api.webapp.example;";
+policy += " child-src 'self';";
+policy += " img-src 'self';";
+policy += " style-src 'self' https://cdn.jsdelivr.net;";
+policy += " object-src 'none';";
+policy += " frame-ancestors 'none';";
+policy += " base-uri 'self';";
+policy += " form-action 'self'";
 
-let devServerConfig: WebpackDevServerConfiguration = {
+const dirname = process.cwd();
+let devServer: WebpackDevServerConfiguration = {
     server: {
         type: 'https',
         options: {
@@ -47,7 +55,38 @@ let devServerConfig: WebpackDevServerConfiguration = {
     allowedHosts: [
         'www.webapp.example'
     ],
+    headers: [
+        {
+            key: 'content-security-policy',
+            value: policy,
+        },
+        {
+            key: 'strict-transport-security',
+            value: 'max-age=31536000; includeSubdomains; preload',
+        },
+        {
+            key: 'x-frame-options',
+            value: 'DENY',
+        },
+        {
+            key: 'x-xss-protection',
+            value: '1; mode=block',
+        },
+        {
+            key: 'x-content-type-options',
+            value: 'nosniff',
+        },
+        {
+            key: 'referrer-policy',
+            value: 'same-origin',
+        },
+    ],
 };
 
-devConfig.devServer = devServerConfig;
+let devConfig: webpack.Configuration = {
+    mode: 'development',
+    devtool: 'source-map',
+    devServer,
+};
+
 export default merge(baseConfig, devConfig);
