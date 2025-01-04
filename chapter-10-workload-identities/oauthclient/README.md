@@ -64,7 +64,7 @@ kubectl -n applications exec -it $OAUTHCLIENT -- bash
 From the container, run the following command to see its service account token:
 
 ```bash
-cat /var/run/secrets/custom_identity/token
+cat /var/run/secrets/kubernetes.io/serviceaccount/token
 ```
 
 In a JWT viewer, this is the payload:
