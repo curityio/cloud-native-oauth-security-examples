@@ -1,9 +1,8 @@
 #!/bin/bash
 
-###############################################################################
-# Run a development load balancer that allows you to get an external IP address
-# This enables you to plan deployments using the same concepts as cloud systems
-###############################################################################
+#######################################################################################################
+# Run a development load balancer provider that assigns an external IP address to LoadBalancer services
+#######################################################################################################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 

@@ -73,6 +73,15 @@ rm signing.csr 2>/dev/null
 cd ..
 
 #
+# Also copy the Kubernetes root CA from the control plane, as the root of trust for service account tokens
+#
+docker cp example-control-plane:/etc/kubernetes/pki/ca.crt ./kubernetes-ca.crt
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered running the utility docker image'
+  exit 1
+fi
+
+#
 # Run a temporary instance of the Curity Identity Server docker container that will perform encryption related tasks
 #
 docker rm -f curity 1>/dev/null 2>&1
@@ -145,6 +154,17 @@ if [ $? -ne 0 ]; then
 fi
 
 #
+# The Curity Identity Server calls the Kubernetes JWKS URI to validate Kubernetes service account tokens used as client assertions
+# Therefore add a trust store for the Kubernetes root CA so that the connection to the Kubernetes JWKS URI is reusted.
+#
+KUBERNETES_CA_BASE64=$(openssl base64 -in kubernetes-ca.crt | tr -d $LINE_SEPARATOR)
+KUBERNETES_CA=$(docker exec -i curity bash -c "TYPE=base64keystore PLAINTEXT='$KUBERNETES_CA_BASE64' ENCRYPTIONKEY='$CONFIG_ENCRYPTION_KEY' /tmp/encrypt-util.sh")
+if [ $? -ne 0 ]; then
+  echo "*** Problem encountered encrypting the Kubernetes root CA: $KUBERNETES_CA"
+  exit 1
+fi
+
+#
 # Create the namespace
 #
 kubectl delete namespace authorizationserver 2>/dev/null
@@ -165,6 +185,7 @@ kubectl -n authorizationserver create secret generic idsvr-secureconfig-properti
   --from-literal="DB_CONNECTION=$DB_CONNECTION" \
   --from-literal="SYMMETRIC_KEY=$SYMMETRIC_KEY" \
   --from-literal="SIGNING_KEY=$SIGNING_KEY" \
+  --from-literal="KUBERNETES_CA=$KUBERNETES_CA" \
   --from-literal="LICENSE_KEY=$LICENSE_KEY"
 if [ $? -ne 0 ]; then
   echo "Problem encountered creating the Kubernetes secret containing secure environment variables"

@@ -316,6 +316,7 @@
                 <id>oauthclient</id>
                 <jwks-uri>
                   <uri>https://kubernetes.default.svc.cluster.local/openid/v1/jwks</uri>
+                  <http-client>jws_uri_client</http-client>
                 </jwks-uri>
                 <scope>products</scope>
                 <capabilities>
@@ -392,6 +393,16 @@
       </data-source>
     </data-sources>
     <crypto>
+      <ssl>
+        <server-truststore>
+          <server-certificate>
+            <id>kubernetes</id>
+            <size>2048</size>
+            <keystore>#{KUBERNETES_CA}</keystore>
+            <type>rsa</type>
+          </server-certificate>
+        </server-truststore>
+      </ssl>
       <signing-keys>
         <signing-key>
           <id>default-signing-key</id>
@@ -408,7 +419,15 @@
         <data-source>default-datasource</data-source>
       </default-caching-service>
     </caching-services>
-  </facilities>
+    <http>
+      <client>
+        <id>jws_uri_client</id>
+        <tls>
+          <use-truststore>true</use-truststore>
+        </tls>
+      </client>
+    </http>
+    </facilities>
   <processing xmlns="https://curity.se/ns/conf/base">
     <license-key>#{LICENSE_KEY}</license-key>
     <account-managers>

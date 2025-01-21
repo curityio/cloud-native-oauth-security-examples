@@ -1,12 +1,19 @@
 replicaCount: 2
 
 image:
-  repository: curity.azurecr.io/curity/idsvr
-  tag: latest
+  repository: curity/idsvr-unstable
+  tag: 9.7.0-f533c2f6af
 
 curity:
   adminUiHttp: true
   admin:
+    #
+    # DELETEME: Prerelease containers build as root
+    #
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     podLabels:
       sidecar.istio.io/inject: 'true'
       spire-managed-identity: 'true'
@@ -21,6 +28,13 @@ curity:
       level: INFO
 
   runtime:
+    #
+    # DELETEME: Prerelease containers build as root
+    #
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     podLabels:
       sidecar.istio.io/inject: 'true'
       spire-managed-identity: 'true'

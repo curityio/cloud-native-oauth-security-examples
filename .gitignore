@@ -5,6 +5,7 @@ license.json
 *democluster*
 *.jar
 *.tar.gz
+*.crt
 download
 curlresponse.txt
 

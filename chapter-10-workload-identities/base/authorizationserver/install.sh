@@ -75,6 +75,15 @@ if [ $? -ne 0 ]; then
 fi
 
 #
+# DELETEME: Load prerelease container into the KIND Docker registry
+#
+kind load docker-image curity/idsvr-unstable:9.7.0-f533c2f6af --name example
+if [ $? -ne 0 ]; then
+  echo '*** Unable to load the Curity Identity Server image into the KIND docker registry'
+  exit 1
+fi
+
+#
 # Run the Helm Chart to deploy the system
 #
 helm repo add curity https://curityio.github.io/idsvr-helm
