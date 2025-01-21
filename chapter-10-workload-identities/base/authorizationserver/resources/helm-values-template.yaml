@@ -1,6 +1,9 @@
 replicaCount: 2
 
 image:
+  #
+  # DELETEME: Revert to the official latest image before merging
+  #
   repository: curity/idsvr-unstable
   tag: 9.7.0-f533c2f6af
 
@@ -8,7 +11,7 @@ curity:
   adminUiHttp: true
   admin:
     #
-    # DELETEME: Prerelease containers build as root
+    # DELETEME: Prerelease containers build as root - remove the security context settings before merging
     #
     securityContext:
       runAsUser: 0
@@ -29,7 +32,7 @@ curity:
 
   runtime:
     #
-    # DELETEME: Prerelease containers build as root
+    # DELETEME: Prerelease containers build as root - remove the security context settings before merging
     #
     securityContext:
       runAsUser: 0
