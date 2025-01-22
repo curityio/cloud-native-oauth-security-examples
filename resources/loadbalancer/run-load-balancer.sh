@@ -17,7 +17,7 @@ fi
 #
 # Calculate operating system specific values
 #
-VERSION='0.5.0'
+VERSION='0.4.0'
 if [ "$(uname -m)" == 'arm64' ]; then
   ARCH='arm64'
 else
