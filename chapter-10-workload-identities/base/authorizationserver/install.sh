@@ -75,7 +75,7 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# DELETEME: Delete this before merging, when it will not longer be necessary to load prerelease docker versions into the KIND Docker registry
+# DELETEME: Delete this before merging, when it will no longer be necessary to load prerelease docker versions into the KIND Docker registry
 #
 docker pull curity/idsvr-unstable:9.7.0-c229d2f92b
 kind load docker-image curity/idsvr-unstable:9.7.0-c229d2f92b --name example

@@ -154,8 +154,8 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# The Curity Identity Server calls the Kubernetes JWKS URI to validate Kubernetes service account tokens used as client assertions
-# Therefore add a trust store for the Kubernetes root CA so that the connection to the Kubernetes JWKS URI is reusted.
+# The Curity Identity Server calls the Kubernetes JWKS URI to validate Kubernetes service account tokens used as client assertions.
+# Therefore add a trust store for the Kubernetes root CA so that the connection to the Kubernetes JWKS URI is trusted.
 #
 KUBERNETES_CA_BASE64=$(openssl base64 -in kubernetes-ca.crt | tr -d $LINE_SEPARATOR)
 KUBERNETES_CA=$(docker exec -i curity bash -c "TYPE=base64keystore PLAINTEXT='$KUBERNETES_CA_BASE64' ENCRYPTIONKEY='$CONFIG_ENCRYPTION_KEY' /tmp/encrypt-util.sh")

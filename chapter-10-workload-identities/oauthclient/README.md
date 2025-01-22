@@ -2,7 +2,7 @@
 
 The test OAuth client is a basic pod that uses the client credentials flow.\
 The same pattern works for clients that use other flows, like backend clients that use the code flow.\
-The OAuth client uses its service account token as the OAuth client credential.
+The OAuth client uses its service account token as a strong and automatically renewed OAuth client credential.
 
 ## Kubernetes Settings
 
@@ -68,7 +68,7 @@ From the container, run the following command to see its service account token:
 cat /var/run/secrets/kubernetes.io/serviceaccount/token
 ```
 
-In a JWT viewer, this is the payload:
+In a JWT viewer, the payload looks similar to the following example:
 
 ```json
 {
@@ -102,8 +102,7 @@ In a JWT viewer, this is the payload:
 ## Act as an OAuth Client
 
 Then run a client credentials request over plain HTTP, supplying the above JWT as a client assertion.\
-The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS.\
-The result should be a response that contains OAuth tokens:
+The client's sidecar calls to the authorization server's sidecar using mutual TLS:
 
 ```bash
 SERVICE_ACCOUNT_TOKEN="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
@@ -116,8 +115,7 @@ curl -s -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v
      -d 'scope=products' | jq
 ```
 
-The token response returns an access token which the authorization server can issue as either opaque or a JWT.\
-The OAuth client uses a strong client credential that the platform automatically rotates, such as every 24 hours.
+The token response returns an access token which the authorization server can issue in either opaque or JWT format:
 
 ```json
 {
