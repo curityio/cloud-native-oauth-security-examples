@@ -38,4 +38,4 @@ spec:
           - serviceAccountToken:
               path: token
               expirationSeconds: 3600
-              audience: 'https://login.democluster.example'
+              audience: 'https://login.democluster.example/oauth/v2/oauth-token'
