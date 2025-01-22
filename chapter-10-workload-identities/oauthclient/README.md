@@ -117,7 +117,7 @@ curl -s -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v
 ```
 
 The token response returns an access token which the authorization server can issue as either opaque or a JWT.\
-The OAuth client uses a strong client credntial that the platform automatically rotates, such as every 24 hours.
+The OAuth client uses a strong client credential that the platform automatically rotates, such as every 24 hours.
 
 ```json
 {

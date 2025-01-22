@@ -330,6 +330,7 @@
                     <jti-required>false</jti-required>
                   </assertion-jwt-validation>
                 </jwks-uri>
+                <access-token-ttl>900</access-token-ttl>
                 <scope>products</scope>
                 <capabilities>
                   <client-credentials/>
