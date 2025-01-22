@@ -90,6 +90,14 @@
             <asymmetrically-signed-jwt>
               <signature-algorithm>RS256</signature-algorithm>
             </asymmetrically-signed-jwt>
+            <using-jwt>
+              <client-id-mappings>
+                <client-id-mapping>
+                  <sub>system:serviceaccount:applications:oauthclient</sub>
+                  <client-id>oauthclient</client-id>
+                </client-id-mapping>
+              </client-id-mappings>
+            </using-jwt>
           </client-authentication>
           <client-capabilities>
             <code>
@@ -315,8 +323,12 @@
               <client>
                 <id>oauthclient</id>
                 <jwks-uri>
-                  <uri>https://kubernetes.default.svc.cluster.local/openid/v1/jwks</uri>
+                  <uri>https://kubernetes.default.svc/openid/v1/jwks</uri>
                   <http-client>jws_uri_client</http-client>
+                  <assertion-jwt-validation>
+                    <issuer>https://kubernetes.default.svc.cluster.local</issuer>
+                    <jti-required>false</jti-required>
+                  </assertion-jwt-validation>
                 </jwks-uri>
                 <scope>products</scope>
                 <capabilities>
