@@ -17,20 +17,6 @@ if [ "$LICENSE_KEY" == '' ]; then
 fi
 
 #
-# Next generate a config encryption key that is used by both the prepare and deploy scripts
-#
-export CONFIG_ENCRYPTION_KEY=$(openssl rand 32 | xxd -p -c 64)
-
-#
-# Run envsubst to provide the final Helm chart
-#
-envsubst < ./resources/helm-values-template.yaml > resources/helm-values.yaml
-if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the helm-values.yaml file'
-  exit 1
-fi
-
-#
 # Prepare a parameterized configuration that protects secure values
 #
 ./protect-secrets.sh
@@ -59,7 +45,8 @@ fi
 #
 # Create a configmap for the authorization server's configuration
 #
-kubectl -n authorizationserver create configmap idsvr-configbackup --from-file='configbackup=./resources/config-backup.xml'
+kubectl -n authorizationserver create configmap idsvr-configbackup \
+  --from-file='config-backup=resources/config-backup.xml'
 if [ $? -ne 0 ]; then
   echo '*** Problem encountered creating the XML configuration configmap'
   exit 1
@@ -77,8 +64,8 @@ fi
 #
 # DELETEME: Delete this before merging, when it will no longer be necessary to load prerelease docker versions into the KIND Docker registry
 #
-docker pull curity/idsvr-unstable:9.7.0-c229d2f92b
-kind load docker-image curity/idsvr-unstable:9.7.0-c229d2f92b --name example
+docker pull curity/idsvr-unstable:10.0.0-76088f8571
+kind load docker-image curity/idsvr-unstable:10.0.0-76088f8571 --name example
 if [ $? -ne 0 ]; then
   echo '*** Unable to load the Curity Identity Server image into the KIND docker registry'
   exit 1

@@ -1,10 +1,10 @@
 <config xmlns="http://tail-f.com/ns/config/1.0">
   <environments xmlns="https://curity.se/ns/conf/base">
     <environment>
-      <base-url>https://login.democluster.example</base-url>
+      <base-url>#{RUNTIME_BASE_URL}</base-url>
       <admin-service>
         <http>
-          <base-url>https://admin.democluster.example</base-url>
+          <base-url>#{ADMIN_BASE_URL}</base-url>
           <web-ui>
           </web-ui>
           <restconf>
@@ -325,11 +325,11 @@
                 <jwks-uri>
                   <uri>https://kubernetes.default.svc/openid/v1/jwks</uri>
                   <http-client>jws_uri_client</http-client>
-                  <assertion-jwt-validation>
-                    <issuer>https://kubernetes.default.svc.cluster.local</issuer>
-                    <jti-required>false</jti-required>
-                  </assertion-jwt-validation>
                 </jwks-uri>
+                <assertion-jwt-validation>
+                  <issuer>https://kubernetes.default.svc.cluster.local</issuer>
+                  <jti-required>false</jti-required>
+                </assertion-jwt-validation>
                 <access-token-ttl>900</access-token-ttl>
                 <scope>products</scope>
                 <capabilities>
