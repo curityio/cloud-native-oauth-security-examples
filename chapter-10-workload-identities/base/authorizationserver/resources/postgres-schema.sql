@@ -11,6 +11,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE delegations (
   id                          VARCHAR(40)   PRIMARY KEY,
+  tenant_id                   VARCHAR(64)   NULL,
   owner                       VARCHAR(128)  NOT NULL,
   created                     BIGINT        NOT NULL,
   expires                     BIGINT        NOT NULL,
@@ -31,6 +32,7 @@ CREATE INDEX IDX_DELEGATIONS_OWNER                   ON delegations (owner ASC);
 CREATE INDEX IDX_DELEGATIONS_AUTHORIZATION_CODE_HASH ON delegations (authorization_code_hash ASC);
 
 COMMENT ON COLUMN delegations.id IS 'Unique identifier';
+COMMENT ON COLUMN delegations.tenant_id IS 'The tenant ID of this delegation';
 COMMENT ON COLUMN delegations.owner IS 'Subject for whom the delegation is issued';
 COMMENT ON COLUMN delegations.expires IS 'Moment when delegation expires, as measured in number of seconds since epoch';
 COMMENT ON COLUMN delegations.scope IS 'Space delimited list of scope values';
@@ -359,4 +361,3 @@ COMMENT ON COLUMN buckets.tenant_id IS 'The tenant ID of this bucket';
 COMMENT ON COLUMN buckets.attributes IS 'All attributes stored for this subject/purpose';
 COMMENT ON COLUMN buckets.created IS 'When this bucket was created';
 COMMENT ON COLUMN buckets.updated IS 'When this bucket was last updated';
-

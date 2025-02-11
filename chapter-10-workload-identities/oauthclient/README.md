@@ -1,7 +1,8 @@
 # Test OAuth Client
 
-The test OAuth client is a basic pod that contains the curl command line tool, so can make HTTP requests.\
-The client presents its service account token as an OAuth client credential.
+The test OAuth client is a basic pod that uses the client credentials flow.\
+The same pattern works for clients that use other flows, like backend clients that use the code flow.\
+The OAuth client uses its service account token as a strong and automatically renewed OAuth client credential.
 
 ## Kubernetes Settings
 
@@ -47,7 +48,7 @@ spec:
           - serviceAccountToken:
               path: token
               expirationSeconds: 3600
-              audience: 'https://login.democluster.example'
+              audience: 'https://login.democluster.example/oauth/v2/oauth-token'
 ```
 
 ## Get a Shell
@@ -64,10 +65,10 @@ kubectl -n applications exec -it $OAUTHCLIENT -- bash
 From the container, run the following command to see its service account token:
 
 ```bash
-cat /var/run/secrets/custom_identity/token
+cat /var/run/secrets/kubernetes.io/serviceaccount/token
 ```
 
-In a JWT viewer, this is the payload:
+In a JWT viewer, the payload looks similar to the following example:
 
 ```json
 {
@@ -101,23 +102,29 @@ In a JWT viewer, this is the payload:
 ## Act as an OAuth Client
 
 Then run a client credentials request over plain HTTP, supplying the above JWT as a client assertion.\
-The client's sidecar calls to the authorization server's sidecar, which upgrades the connection to use mutual TLS.\
-The result should be a response that contains OAuth tokens:
+The client's sidecar calls to the authorization server's sidecar using mutual TLS:
 
 ```bash
 SERVICE_ACCOUNT_TOKEN="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
-curl -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-token \
+curl -s -X POST http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-token \
      -H 'Content-Type: application/x-www-form-urlencoded' \
      -d 'grant_type=client_credentials' \
      -d 'client_id=oauthclient' \
      -d "client_assertion=$SERVICE_ACCOUNT_TOKEN" \
      -d 'client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer' \
-     -d 'scope=products'
+     -d 'scope=products' | jq
 ```
 
-At the time of writing, the default authorization server implements client assertions according to the OpenID Connect Core specification.\
-This leads to the error explained in [Best Current Practice for OAuth 2.0 Client Authentication in Workload Environments](https://www.ietf.org/archive/id/draft-ietf-wimse-workload-identity-bcp-01.html#appendix-A-13).\
-There is an active product request to enable usage of the RFC7523 behavior, which will fix this issue.
+The token response returns an access token which the authorization server can issue in either opaque or JWT format:
+
+```json
+{
+  "access_token": "_0XBPWQQ_48c7a1f1-f0ab-4f90-a53d-485a398af901",
+  "scope": "products",
+  "token_type": "bearer",
+  "expires_in": 900
+}
+```
 
 ## Using JWT SVIDs
 

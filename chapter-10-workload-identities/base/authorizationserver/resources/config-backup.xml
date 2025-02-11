@@ -1,10 +1,10 @@
 <config xmlns="http://tail-f.com/ns/config/1.0">
   <environments xmlns="https://curity.se/ns/conf/base">
     <environment>
-      <base-url>https://login.democluster.example</base-url>
+      <base-url>#{RUNTIME_BASE_URL}</base-url>
       <admin-service>
         <http>
-          <base-url>https://admin.democluster.example</base-url>
+          <base-url>#{ADMIN_BASE_URL}</base-url>
           <web-ui>
           </web-ui>
           <restconf>
@@ -90,6 +90,14 @@
             <asymmetrically-signed-jwt>
               <signature-algorithm>RS256</signature-algorithm>
             </asymmetrically-signed-jwt>
+            <using-jwt>
+              <client-id-mappings>
+                <client-id-mapping>
+                  <sub>system:serviceaccount:applications:oauthclient</sub>
+                  <client-id>oauthclient</client-id>
+                </client-id-mapping>
+              </client-id-mappings>
+            </using-jwt>
           </client-authentication>
           <client-capabilities>
             <code>
@@ -315,8 +323,14 @@
               <client>
                 <id>oauthclient</id>
                 <jwks-uri>
-                  <uri>https://kubernetes.default.svc.cluster.local/openid/v1/jwks</uri>
+                  <uri>https://kubernetes.default.svc/openid/v1/jwks</uri>
+                  <http-client>jws_uri_client</http-client>
                 </jwks-uri>
+                <assertion-jwt-validation>
+                  <issuer>https://kubernetes.default.svc.cluster.local</issuer>
+                  <jti-required>false</jti-required>
+                </assertion-jwt-validation>
+                <access-token-ttl>900</access-token-ttl>
                 <scope>products</scope>
                 <capabilities>
                   <client-credentials/>
@@ -392,6 +406,16 @@
       </data-source>
     </data-sources>
     <crypto>
+      <ssl>
+        <server-truststore>
+          <server-certificate>
+            <id>kubernetes</id>
+            <size>2048</size>
+            <keystore>#{KUBERNETES_CA}</keystore>
+            <type>rsa</type>
+          </server-certificate>
+        </server-truststore>
+      </ssl>
       <signing-keys>
         <signing-key>
           <id>default-signing-key</id>
@@ -408,7 +432,15 @@
         <data-source>default-datasource</data-source>
       </default-caching-service>
     </caching-services>
-  </facilities>
+    <http>
+      <client>
+        <id>jws_uri_client</id>
+        <tls>
+          <use-truststore>true</use-truststore>
+        </tls>
+      </client>
+    </http>
+    </facilities>
   <processing xmlns="https://curity.se/ns/conf/base">
     <license-key>#{LICENSE_KEY}</license-key>
     <account-managers>
