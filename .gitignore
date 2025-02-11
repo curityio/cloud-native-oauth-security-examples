@@ -5,6 +5,7 @@ license.json
 *democluster*
 *.jar
 *.tar.gz
+*.crt
 download
 curlresponse.txt
 
@@ -38,5 +39,5 @@ resources/apigateway/helm-values.yaml
 
 ## SPIFFE
 chapter-10-workload-identities/base/authorizationserver/resources/signing*
-chapter-10-workload-identities/base/authorizationserver/resources/helm-values.yaml
+chapter-10-workload-identities/base/authorizationserver/resources/postgres-schema.yaml
 !chapter-10-workload-identities/demoapi/gradle/wrapper/gradle-wrapper.jar

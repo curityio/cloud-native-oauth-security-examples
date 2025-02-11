@@ -43,6 +43,17 @@ if [ "$PLATFORM" == 'WINDOWS' ]; then
 fi
 
 #
+# First generate a config encryption key
+#
+CONFIG_ENCRYPTION_KEY=$(openssl rand 32 | xxd -p -c 64)
+
+#
+# Configure system base URLs
+#
+ADMIN_BASE_URL='https://admin.democluster.example'
+RUNTIME_BASE_URL='https://login.democluster.example'
+
+#
 # Hash the admin password
 #
 ADMIN_PASSWORD_RAW='Password1'
@@ -73,6 +84,15 @@ rm signing.csr 2>/dev/null
 cd ..
 
 #
+# Also copy the Kubernetes root CA from the control plane, as the root of trust for service account tokens
+#
+docker cp example-control-plane:/etc/kubernetes/pki/ca.crt ./kubernetes-ca.crt
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered running the utility docker image'
+  exit 1
+fi
+
+#
 # Run a temporary instance of the Curity Identity Server docker container that will perform encryption related tasks
 #
 docker rm -f curity 1>/dev/null 2>&1
@@ -97,6 +117,12 @@ done
 echo 'Protecting secure environment variables ...'
 docker cp ./encrypt-util.sh curity:/tmp/
 docker exec -i curity bash -c 'chmod +x /tmp/encrypt-util.sh'
+
+docker cp curity:/opt/idsvr/etc/postgres-create_database.sql ./resources/postgres-schema.sql
+if [ $? -ne 0 ]; then
+  echo "*** Problem encountered getting the Postgres database script"
+  exit 1
+fi
 
 #
 # Use the encryption script to get the encrypted DB password
@@ -145,6 +171,17 @@ if [ $? -ne 0 ]; then
 fi
 
 #
+# The Curity Identity Server calls the Kubernetes JWKS URI to validate Kubernetes service account tokens used as client assertions.
+# Therefore add a trust store for the Kubernetes root CA so that the connection to the Kubernetes JWKS URI is trusted.
+#
+KUBERNETES_CA_BASE64=$(openssl base64 -in kubernetes-ca.crt | tr -d $LINE_SEPARATOR)
+KUBERNETES_CA=$(docker exec -i curity bash -c "TYPE=base64keystore PLAINTEXT='$KUBERNETES_CA_BASE64' ENCRYPTIONKEY='$CONFIG_ENCRYPTION_KEY' /tmp/encrypt-util.sh")
+if [ $? -ne 0 ]; then
+  echo "*** Problem encountered encrypting the Kubernetes root CA: $KUBERNETES_CA"
+  exit 1
+fi
+
+#
 # Create the namespace
 #
 kubectl delete namespace authorizationserver 2>/dev/null
@@ -155,17 +192,31 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create a secret containing protected environment variables
+# Create a configmap with plaintest parameters
 #
-kubectl -n authorizationserver delete secret idsvr-secureconfig-properties 2>/dev/null
-kubectl -n authorizationserver create secret generic idsvr-secureconfig-properties \
+kubectl -n authorizationserver delete configmap idsvr-parameters 2>/dev/null
+kubectl -n authorizationserver create configmap idsvr-parameters \
+  --from-literal="ADMIN_BASE_URL=$ADMIN_BASE_URL" \
+  --from-literal="RUNTIME_BASE_URL=$RUNTIME_BASE_URL" \
+  --from-literal="DB_USER=$DB_USER"
+if [ $? -ne 0 ]; then
+  echo "Problem encountered creating the Kubernetes secret containing secure environment variables"
+  exit 1
+fi
+
+#
+# Create a secret with protected parameters
+#
+kubectl -n authorizationserver delete secret idsvr-protected-parameters 2>/dev/null
+kubectl -n authorizationserver create secret generic idsvr-protected-parameters \
   --from-literal="ADMIN_PASSWORD=$ADMIN_PASSWORD" \
-  --from-literal="DB_USER=$DB_USER" \
   --from-literal="DB_PASSWORD=$DB_PASSWORD" \
   --from-literal="DB_CONNECTION=$DB_CONNECTION" \
   --from-literal="SYMMETRIC_KEY=$SYMMETRIC_KEY" \
   --from-literal="SIGNING_KEY=$SIGNING_KEY" \
-  --from-literal="LICENSE_KEY=$LICENSE_KEY"
+  --from-literal="KUBERNETES_CA=$KUBERNETES_CA" \
+  --from-literal="LICENSE_KEY=$LICENSE_KEY" \
+  --from-literal="CONFIG_ENCRYPTION_KEY=$CONFIG_ENCRYPTION_KEY"
 if [ $? -ne 0 ]; then
   echo "Problem encountered creating the Kubernetes secret containing secure environment variables"
   exit 1

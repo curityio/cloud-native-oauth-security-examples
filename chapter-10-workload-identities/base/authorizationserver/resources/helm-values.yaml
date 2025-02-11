@@ -37,16 +37,17 @@ curity:
   config:
     uiEnabled: true
     skipInstall: true
-    encryptionKey: $CONFIG_ENCRYPTION_KEY
     configuration:
       - configMapRef:
           name: idsvr-configbackup
           items:
-            - key: configbackup
-              path: idsvr-config-backup.xml
+          - key: config-backup
+            path: config-backup.xml
 
+    environmentVariableConfigMaps:
+    - idsvr-parameters
     environmentVariableSecrets:
-      - idsvr-secureconfig-properties
+    - idsvr-protected-parameters
 
 networkpolicy:
   enabled: false
