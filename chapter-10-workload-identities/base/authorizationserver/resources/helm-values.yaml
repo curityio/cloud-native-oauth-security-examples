@@ -1,22 +1,12 @@
 replicaCount: 2
 
 image:
-  #
-  # DELETEME: Revert to the official latest image before merging
-  #
-  repository: curity/idsvr-unstable
-  tag: 10.0.0-76088f8571
+  repository: curity.azurecr.io/curity/idsvr
+  tag: latest
 
 curity:
   adminUiHttp: true
   admin:
-    #
-    # DELETEME: Prerelease containers build as root - remove the security context settings before merging
-    #
-    securityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
     podLabels:
       sidecar.istio.io/inject: 'true'
       spire-managed-identity: 'true'
@@ -31,13 +21,6 @@ curity:
       level: INFO
 
   runtime:
-    #
-    # DELETEME: Prerelease containers build as root - remove the security context settings before merging
-    #
-    securityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
     podLabels:
       sidecar.istio.io/inject: 'true'
       spire-managed-identity: 'true'

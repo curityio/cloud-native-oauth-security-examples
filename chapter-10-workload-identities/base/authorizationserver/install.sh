@@ -62,16 +62,6 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# DELETEME: Delete this before merging, when it will no longer be necessary to load prerelease docker versions into the KIND Docker registry
-#
-docker pull curity/idsvr-unstable:10.0.0-76088f8571
-kind load docker-image curity/idsvr-unstable:10.0.0-76088f8571 --name example
-if [ $? -ne 0 ]; then
-  echo '*** Unable to load the Curity Identity Server image into the KIND docker registry'
-  exit 1
-fi
-
-#
 # Run the Helm Chart to deploy the system
 #
 helm repo add curity https://curityio.github.io/idsvr-helm
