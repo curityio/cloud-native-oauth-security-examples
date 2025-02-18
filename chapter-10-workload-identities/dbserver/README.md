@@ -63,9 +63,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON products TO demoapi;
 
 ## X509 SVID Downloads
 
-The SPIFFE helper utility runs in a sidecar and downloads X509 SVIDs.\
+The SPIFFE helper utility runs in sidecars and downloads X509 SVIDs:
+- An init container receives initial SVIDs before the main Postgres container runs.
+- Another sidecar container runs permanently to receive SVID updates.
+
 The pod mounts the SPIFFE workload endpoint using the SPIFFE CSI driver.\
-The helper then saves certificates to file, which Postgres is then configured to load.
+The helper then saves certificates to a volume shared with the main Postgres container.
 
 ```yaml
 spec:
@@ -84,7 +87,7 @@ spec:
       - name: svids
         mountPath: /svids
   - name: dbserver-spiffehelper
-    image: ghcr.io/spiffe/spiffe-helper:0.8.0
+    image: ghcr.io/spiffe/spiffe-helper:0.9.1
     volumeMounts:
       - name: dbserver-spiffehelper-config
         mountPath: /service/helper.conf
@@ -108,19 +111,7 @@ spec:
 ```
 
 The Postgres docker container copies an `init-dbserver.sh` script to `/docker-entrypoint-initdb.d`.\
-This waits for the SPIFFE helper sidecar to make SPIFFE X509 SVIDs available to a shared volume:
-
-```bash
-echo 'Waiting for X509 SVIDs ...'
-COUNT=0;
-while [[ COUNT -lt 20 ]] && [[ ! -f '/svids/svid_key.pem' ]]; do
-  echo -n '.'
-  sleep 1
-  ((COUNT++))
-done
-```
-
-The Postgres docker container uses a tool called `inotifywait` to detect when new SVIDs have arrived.\
+This script uses a tool called `inotifywait` to detect when new SVIDs have arrived.\
 It then runs a `reload_dbconfiguration.sh` script using a local Unix domain socket connection:
 
 ```bash
