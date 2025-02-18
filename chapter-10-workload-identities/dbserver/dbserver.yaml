@@ -64,7 +64,7 @@ spec:
           - name: svids
             mountPath: /svids
       - name: dbserver-spiffehelper
-        image: ghcr.io/spiffe/spiffe-helper:0.8.0
+        image: ghcr.io/spiffe/spiffe-helper:0.9.1
         args:
           - -config
           - /etc/helper.conf
@@ -83,7 +83,7 @@ spec:
             mountPath: /svids
       initContainers:
       - name: dbserver-spiffehelper-init
-        image: ghcr.io/spiffe/spiffe-helper:0.8.0
+        image: ghcr.io/spiffe/spiffe-helper:0.9.1
         args:
           - -config
           - /etc/helper-init.conf
