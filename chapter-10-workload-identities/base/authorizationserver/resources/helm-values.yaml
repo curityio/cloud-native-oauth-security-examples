@@ -50,4 +50,5 @@ curity:
     - idsvr-protected-parameters
 
 networkpolicy:
-  enabled: false
+  enabled: true
+  apigatewayNamespace: kong

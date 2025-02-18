@@ -182,16 +182,6 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create the namespace
-#
-kubectl delete namespace authorizationserver 2>/dev/null
-kubectl create namespace authorizationserver
-if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the authorizationserver namespace'
-  exit 1
-fi
-
-#
 # Create a configmap with plaintest parameters
 #
 kubectl -n authorizationserver delete configmap idsvr-parameters 2>/dev/null
