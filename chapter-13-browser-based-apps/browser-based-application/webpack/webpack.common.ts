@@ -22,6 +22,7 @@ const config: webpack.Configuration = {
 
   context: path.resolve(dirname, './src'),
   target: ['web'],
+
   entry: {
     app: ['./index.tsx']
   },
