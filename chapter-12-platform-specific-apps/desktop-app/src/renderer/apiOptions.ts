@@ -14,18 +14,7 @@
  *  limitations under the License.
  */
 
-import {parseMainError} from './errorUtil';
-
-/*
- * A generic routine to call the main side of the app for a named operation with request data
- * The app receives an object response or an object error responses
- */
-export async function ipcRequest(name: string, requestData: any = {}): Promise<any> {
-
-    const result = await (window as any).api.sendMessage(name, requestData);
-    if (result.error) {
-        throw parseMainError(result.error);
-    } else {
-        return result.data;
-    }
+export interface ApiOptions {
+    name: string;
+    requestData?: any;
 }

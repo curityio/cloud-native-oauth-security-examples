@@ -32,7 +32,8 @@ export function SignInView(props: SignInProps) {
             setErrorText('');
             setIsInProgress(true);
             
-            // Call the main side of the app to log in and get ID token claims
+            // Call the main side of the app to initiate login processing
+            // The React app receives a response containing ID token claims
             const claims = await ipcRequest(IpcEventNames.Login);
             
             // Bring the app back to the foreground

@@ -16,10 +16,9 @@
 
 import React, {useState} from 'react';
 import {ApplicationError} from '../../shared/applicationError';
-import {IpcEventNames} from '../../shared/ipcEventNames';
 import {Order} from '../../shared/order';
+import {getOrders} from '../apiRequest';
 import {getErrorText} from '../errorUtil';
-import {apiRequest} from '../ipcRequest';
 import {CallApiProps} from './callApiProps';
 
 export function CallApiView(props: CallApiProps) {
@@ -31,7 +30,7 @@ export function CallApiView(props: CallApiProps) {
 
         try {
             setErrorText('');
-            const orders = await apiRequest<Order[]>(IpcEventNames.ApiOrders);
+            const orders = await getOrders();
             setOrderList(orders);
 
         } catch (e: any) {
