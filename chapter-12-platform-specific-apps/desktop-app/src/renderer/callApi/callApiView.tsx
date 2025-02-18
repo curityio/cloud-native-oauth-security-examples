@@ -19,7 +19,7 @@ import {ApplicationError} from '../../shared/applicationError';
 import {IpcEventNames} from '../../shared/ipcEventNames';
 import {Order} from '../../shared/order';
 import {getErrorText} from '../errorUtil';
-import {apiRequest} from '../ipcRequest';
+import {makeApiRequest} from '../apiRequest';
 import {CallApiProps} from './callApiProps';
 
 export function CallApiView(props: CallApiProps) {
@@ -31,7 +31,7 @@ export function CallApiView(props: CallApiProps) {
 
         try {
             setErrorText('');
-            const orders = await apiRequest<Order[]>(IpcEventNames.ApiOrders);
+            const orders = await makeApiRequest({name: IpcEventNames.ApiOrders}) as Order[];
             setOrderList(orders);
 
         } catch (e: any) {

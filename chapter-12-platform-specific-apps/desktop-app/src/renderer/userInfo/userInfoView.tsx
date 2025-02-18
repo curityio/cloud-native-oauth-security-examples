@@ -19,7 +19,7 @@ import {ApplicationError} from '../../shared/applicationError';
 import {UserInfo} from '../../shared/userInfo';
 import {IpcEventNames} from '../../shared/ipcEventNames';
 import {getErrorText} from '../errorUtil';
-import {apiRequest} from '../ipcRequest';
+import {makeApiRequest} from '../apiRequest';
 import {UserInfoProps} from './userInfoProps';
 
 export function UserInfoView(props: UserInfoProps) {
@@ -31,7 +31,7 @@ export function UserInfoView(props: UserInfoProps) {
 
         try {
             setErrorText('');
-            const data = await apiRequest<UserInfo>(IpcEventNames.UserInfo);
+            const data = await makeApiRequest({name: IpcEventNames.UserInfo}) as UserInfo;
             setUserName(`${data.givenName} ${data.familyName}`);
 
         } catch (e: any) {
