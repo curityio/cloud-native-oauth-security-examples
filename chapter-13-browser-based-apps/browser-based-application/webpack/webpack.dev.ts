@@ -20,6 +20,10 @@ import {Configuration as WebpackDevServerConfiguration} from 'webpack-dev-server
 import {merge} from 'webpack-merge';
 import baseConfig from './webpack.common.js';
 
+/*
+ * During development, use a content security policy that restricts the allowed domains.
+ * The SPA only allows fetch requests to its APIs and only runs scripts from its web origin.
+ */
 let policy = "default-src 'none';";
 policy += " script-src 'self';";
 policy += " connect-src 'self' https://api.webapp.example;";
@@ -52,34 +56,15 @@ let devServer: WebpackDevServerConfiguration = {
         'www.webapp.example'
     ],
     /*
-    * During development the app uses a lightweight web host and sets strong security headers
-    * Equivalent headers should also be set when the SPA is deployed to its production web host
+    * During development the app sets a strong content security policy.
+    * Equivalent headers should also be set when the SPA is deployed to its production web host.
+    * Also consider using other recommended security headers in development and deployed systems.
+    * - https://infosec.mozilla.org/guidelines/web_security
     */
-
     headers: [
         {
             key: 'content-security-policy',
             value: policy,
-        },
-        {
-            key: 'strict-transport-security',
-            value: 'max-age=31536000; includeSubdomains; preload',
-        },
-        {
-            key: 'x-frame-options',
-            value: 'DENY',
-        },
-        {
-            key: 'x-xss-protection',
-            value: '1; mode=block',
-        },
-        {
-            key: 'x-content-type-options',
-            value: 'nosniff',
-        },
-        {
-            key: 'referrer-policy',
-            value: 'same-origin',
         },
     ],
 };
