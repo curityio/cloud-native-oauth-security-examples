@@ -22,9 +22,9 @@ Then add the following value to the list of entries in your hosts file that poin
 
 Change authentication in the authorization server by signing in to the admin UI:
 
-- URL: https://admin.democluster.example
-- User: admin
-- Password: Password1
+- URL: `https://admin.democluster.example/admin`
+- User: `admin`
+- Password: `Password1`
 
 Use the `Changes / Upload` menu option to upload the `upgrade-authentication.xml` file, which makes these changes:
 
