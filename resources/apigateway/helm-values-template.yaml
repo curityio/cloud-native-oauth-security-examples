@@ -19,8 +19,8 @@ proxy:
     enabled: false
 
 # Uncomment this if you need to use extraPortMapping to enable external connectivity to the API gateway
-nodeSelector:
-  example-control-plane
+#nodeSelector:
+#  kubernetes.io/hostname: 'example-worker'
 
 #
 # The chapter 10 deployment adds an Istio sidecar container to gateway pods
