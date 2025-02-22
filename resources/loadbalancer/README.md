@@ -1,8 +1,6 @@
-# Cluster Connectivity
+# Troubleshoot External Connectivity
 
-TODO
-
-We want you to use external connectivity on a development computer in the same way as for real Kubernetes systems.
+On a development computer, we aim to connect to the API gateway in the most standard way, to match real Kubernetes environments.
 
 ## Preferred Option
 
@@ -15,9 +13,8 @@ kubectl get svc -n kong
 You should see the following line of output:
 
 ```text
-NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE
-default       kubernetes                     ClusterIP      10.96.0.1       <none>        443/TCP                         2m19s
-kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP                   36s
+NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT
+kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
 When particular deployments instruct you to update the `/etc/hosts` file you can then add entries like the following.\
@@ -27,29 +24,19 @@ You can even run multiple local clusters, each with their own external IP addres
 172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
-You then need to trust the API gateway root certificate at the following path.
-
-```text
-resources/apigateway/external-certs/democluster.ca.pem
-```
-
-You should then be able to connect to deployed components using the hostname expressed in its `HttpRoute` resource.
+You should then be able to establish connectivity to deployed components using the hostname expressed in its `HttpRoute` resource.
 
 ```bash
 curl -i -k https://api.democluster.example
 ```
 
-In some cases you may also need to allow an operating system prompt.
-
-```text
-Do you want the application “cloud-provider-kind” to accept incoming network connections?
-```
-
 ## Backup Option
 
-However, on some macOS or Windows computers, you may run into infrastructure that prevents cloud-provider-kind from working.\
-In such cases you can fall back to [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) by editing the [cluster.yaml file](../base/cluster.yaml) before creating the cluster.\
-The following command uses port mapping on the first worker node:
+However, on some macOS or Windows computers, infrastructure like firewalls may prevent cloud-provider-kind from working.\
+In such cases you use developer specific workarounds with [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) and you no longer need to run cloud-provider-kind.
+
+First, update the [cluster.yaml file](../base/cluster.yaml) to the following content before creating the cluster.\
+The first Kubernetes worker node then receives all HTTPS requests from outside the cluster.
 
 ```yaml
 kind: Cluster
@@ -57,14 +44,8 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
 - role: worker
-  kubeadmConfigPatches:
-  - |
-    kind: JoinConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
   extraPortMappings:
-  - containerPort: 443
+  - containerPort: 30000
     hostPort: 443
     protocol: TCP
   extraMounts:
@@ -76,40 +57,57 @@ nodes:
     containerPath: /etc/systemd/containerd.service
 ```
 
-Then uncomment the following settings in the [API Gateway Helm Chart](../apigateway/helm-values-template.yaml) to also force API gateway pods to run on the first worker node.
+Next, update the [API Gateway Helm Chart](../apigateway/helm-values-template.yaml) to the following content before deploying the gateway.\
+All API gateway pods then get scheduled to run on the first Kubernetes worker node, which receives all external HTTPS traffic.
 
 ```yaml
+image:
+  repository: custom-kong
+  tag: 1.0.0
+
+replicaCount: 2
+proxy:
+  type: NodePort
+  http:
+    enabled: false
+  tls:
+    nodePort: 30000
 nodeSelector:
-  example-worker
+  kubernetes.io/hostname: 'example-worker'
+
+$SERVICE_MESH_SETTINGS
+
+plugins:
+  configMaps:
+  - pluginName: oauth-proxy
+    name: curity-oauth-proxy
+  - pluginName: phantom-token
+    name: curity-phantom-token
+
+env:
+  nginx_http_lua_shared_dict: 'phantom-token 10m'
 ```
 
-Stop running cloud-provider-kind and update your `/etc/hosts` file with your loopback IP address.
+You can then use your loopback IP address whenever our deployments instruct you to update your `/etc/hosts` file.
 
 ```text
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
-When you run the following command.
+The following command will then show different output.
 
 ```bash
 kubectl get svc -n kong
 ```
 
-You will then see a pending status for the external IP address of the API gateway.
+The API gateway now uses a service of type `NodePort` and no longer gets an external IP address:
 
 ```text
-NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE
-default       kubernetes                     ClusterIP      10.96.0.1       <none>        443/TCP                         2m19s
-kong          kong-kong-proxy                LoadBalancer   10.96.4.208     <pending>     443:32368/TCP                   36s
+NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)
+kong          kong-kong-proxy                NodePort       10.96.4.208     <none>        443:32368/TCP
 ```
 
-You still need to trust the API gateway root certificate at the following path.
-
-```text
-resources/apigateway/external-certs/democluster.ca.pem
-```
-
-You will then be able to connect to deployed components using the hostname expressed in its `HttpRoute` resource.
+You will then be able to establish a connection to deployed components using the hostname expressed in its `HttpRoute` resource.
 
 ```bash
 curl -i -k https://api.democluster.example
