@@ -99,7 +99,7 @@ KONG_POD=$(kubectl -n kong get pod -o jsonpath="{.items[0].metadata.name}")
 kubectl -n kong logs -f $KONG_POD -c proxy
 ```
 
-### 6. Troubleshoot Connectivity
+### 6. Troubleshoot Connectivity if Required
 
 If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
 
