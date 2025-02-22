@@ -10,21 +10,21 @@ When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-prov
 kubectl get svc -n kong
 ```
 
-You should see the following line of output:
+You should output similar to the following:
 
 ```text
 NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT
 kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
-When particular deployments instruct you to update the `/etc/hosts` file you can then add entries like the following.\
+When particular deployments instruct you to update the `/etc/hosts` file you can then add entries for the external IP address.\
 You can even run multiple local clusters, each with their own external IP address. 
 
 ```text
 172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
-You should then be able to establish connectivity to deployed components using the hostname expressed in its `HttpRoute` resource.
+You should then be able to connect to deployed components using the hostname expressed in the `HttpRoute` resource.
 
 ```bash
 curl -i -k https://api.democluster.example
@@ -107,7 +107,7 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                NodePort       10.96.4.208     <none>        443:32368/TCP
 ```
 
-You will then be able to establish a connection to deployed components using the hostname expressed in its `HttpRoute` resource.
+You will then be able to establish a connection to deployed components using the hostname expressed in the `HttpRoute` resource.
 
 ```bash
 curl -i -k https://api.democluster.example
