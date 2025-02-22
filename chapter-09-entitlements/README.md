@@ -83,7 +83,8 @@ Deploy the example API from [chapter 5](/chapter-05-secure-api-development/), ru
 ./5-deploy-api-with-opa.sh
 ```
 
-- Locate the API endpoint at `https://api.democluster.example/orders`
+- Locate the API endpoint at `https://api.democluster.example/orders`.
+- If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
 
 The API queries OPA for the authorization decision. OPA runs as a sidecar on the same pod as the API and points to the policy retrieval point to get its policy. The API can communicate with the OPA over its local interface. See an excerpt from the deployment file (`chapter-05-secure-api-development/deployment/kubernetes/deployment.yaml`).
 

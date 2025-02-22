@@ -41,4 +41,3 @@ plugins:
 #
 env:
   nginx_http_lua_shared_dict: 'phantom-token 10m'
-
