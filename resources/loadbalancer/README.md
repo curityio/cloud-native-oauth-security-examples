@@ -54,7 +54,7 @@ nodes:
 - role: worker
   extraMounts:
   - hostPath: containerd.service
-    containerPath: /etc/systemd/containerd.service
+    containerPath: /etc/systemd/system/containerd.service
 ```
 
 Next, update the [API Gateway Helm Chart](../apigateway/helm-values-template.yaml) to the following content before deploying the gateway.\
