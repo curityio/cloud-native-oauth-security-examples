@@ -1,5 +1,7 @@
 # Cluster Connectivity
 
+TODO
+
 We want you to use external connectivity on a development computer in the same way as for real Kubernetes systems.
 
 ## Preferred Option
