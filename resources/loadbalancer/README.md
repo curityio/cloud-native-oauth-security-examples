@@ -37,7 +37,7 @@ In some cases you may also need to approve a firewall prompt from the operating 
 Do you want the application “cloud-provider-kind” to accept incoming network connections?
 ```
 
-## Local Load Balancer
+## Troubleshooting Failed Connections
 
 The cloud-provider-kind spins up a local Docker load balancer for each Kubernetes service of type `LoadBalancer`.
 
@@ -67,7 +67,7 @@ You may get an error like this, where the client tries to initiate an HTTPS conn
 curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:443 
 ```
 
-## Backup Option
+## Extra Port Mapping
 
 If you cannot get cloud-provider-kind to work you can use [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) instead.\
 First, update the [cluster.yaml file](../base/cluster.yaml) to the following content before creating the cluster.\
