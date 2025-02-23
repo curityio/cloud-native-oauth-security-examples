@@ -47,7 +47,7 @@ bcc56c332115   envoyproxy/envoy:v1.30.1   0.0.0.0:63574->443/tcp    kindccm-5445
 ```
 
 On macOS and Windows, cloud-provider-kind also creates an HTTP tunnel using an ephmeral port like 63574.\
-The tunnel routes requests from the local loopback network interface to the KIND docker bridge network.
+The tunnel routes requests from the local loopback network interface to the KIND docker network.
 
 ```bash
 docker network inspect kind
