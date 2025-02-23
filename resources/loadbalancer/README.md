@@ -4,7 +4,8 @@ On a development computer, we aim to connect to the API gateway in the most stan
 
 ## Preferred Option
 
-When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) the Kubernetes API gateway should get an external IP address that you can view with the following command:
+When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it adds an external IP address to the [host computer loopback network interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go).\
+The Kubernetes API gateway uses it as an external IP address that you can view with the following command:
 
 ```bash
 kubectl get svc -n kong
@@ -17,7 +18,7 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
-When particular deployments instruct you to update the `/etc/hosts` file you can then add entries for the external IP address.\
+When our example deployments instruct you to update the `/etc/hosts` file you can then add entries for the external IP address.\
 You can even run multiple local clusters, each with their own external IP address. 
 
 ```text
@@ -30,11 +31,45 @@ You should then be able to connect to deployed components using the hostname exp
 curl -i -k https://api.democluster.example
 ```
 
+In some cases you may also need to approve a firewall prompt from the operating system.
+
+```text
+Do you want the application “cloud-provider-kind” to accept incoming network connections?
+```
+
+## Local Load Balancer
+
+The cloud-provider-kind spins up a local Docker load balancer for each Kubernetes service of type `LoadBalancer`.
+
+```text
+CONTAINER ID   IMAGE                      PORTS                     NAMES
+bcc56c332115   envoyproxy/envoy:v1.30.1   0.0.0.0:63574->443/tcp    kindccm-544599e9a77f
+```
+
+On macOS and Windows, cloud-provider-kind also creates an HTTP tunnel using an ephmeral port like 63574.\
+The tunnel routes requests from the local loopback network interface to the KIND docker bridge network.
+
+```bash
+docker network inspect kind
+```
+
+You should be able to call through the load balancer using port 443 or the ephemeral port that the tunnel uses:
+
+```bash
+curl -i -k https://api.democluster.example
+curl -i -k https://api.democluster.example:63574
+```
+
+On some macOS or Windows computers, the connection may fail on some computers when you use port 443.\
+You may get an error like this, where the client tries to initiate an HTTPS connection but cannot connect.
+
+```text
+curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:443 
+```
+
 ## Backup Option
 
-However, on some macOS or Windows computers, infrastructure like firewalls may prevent cloud-provider-kind from working.\
-In such cases you use developer specific workarounds with [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) and you no longer need to run cloud-provider-kind.
-
+If you cannot get cloud-provider-kind to work you can use [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) instead.\
 First, update the [cluster.yaml file](../base/cluster.yaml) to the following content before creating the cluster.\
 The first Kubernetes worker node then receives all HTTPS requests from outside the cluster.
 
