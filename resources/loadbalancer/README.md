@@ -18,7 +18,7 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
-When our example deployments instruct you to update the `/etc/hosts` file you can then add entries for the external IP address.\
+When our example deployments instruct you to update the `/etc/hosts` file use the external IP address.\
 You can even run multiple local clusters, each with their own external IP address. 
 
 ```text
@@ -60,8 +60,8 @@ curl -i -k https://api.democluster.example
 curl -i -k https://api.democluster.example:63574
 ```
 
-On some macOS or Windows computers, the connection may fail on some computers when you use port 443.\
-You may get an error like this, where the client tries to initiate an HTTPS connection but cannot connect.
+On macOS or Windows, cloud-provider-kind is experimental and might fail on some computers when you use port 443.\
+You may get an error like this, where the client tries to initiate an HTTPS connection but the network connection fails.
 
 ```text
 curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:443 
@@ -92,8 +92,8 @@ nodes:
     containerPath: /etc/systemd/system/containerd.service
 ```
 
-Next, update the [API Gateway Helm Chart](../apigateway/helm-values-template.yaml) to the following content before deploying the gateway.\
-All API gateway pods then get scheduled to run on the first Kubernetes worker node, which receives all external HTTPS traffic.
+Next, update the [API Gateway Helm values file](../apigateway/helm-values-template.yaml) to the following content before deploying the gateway.\
+The scheduler then runs all API gateway pods on the first Kubernetes worker node, which receives all external HTTPS traffic.
 
 ```yaml
 image:
@@ -142,7 +142,7 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                NodePort       10.96.4.208     <none>        443:32368/TCP
 ```
 
-You will then be able to establish a connection to deployed components using the hostname expressed in the `HttpRoute` resource.
+You will then be able to establish a working connection to deployed components.
 
 ```bash
 curl -i -k https://api.democluster.example
