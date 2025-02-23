@@ -2,7 +2,7 @@
 
 On a development computer, we aim to connect to the API gateway in the most standard way, to match real Kubernetes environments.
 
-## Preferred Option
+## Cloud Provider KIND
 
 When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it adds an external IP address to the [host computer loopback network interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go).\
 The Kubernetes API gateway uses it as an external IP address that you can view with the following command:
