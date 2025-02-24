@@ -1,6 +1,6 @@
 # Troubleshoot External Connectivity
 
-Ee want you to connect from a local computer to the API gateway with Kubernetes behaviors that match deployed environments.
+We want you to connect from a local computer to the API gateway with Kubernetes behaviors that match deployed environments.
 
 ## Cloud Provider KIND
 
