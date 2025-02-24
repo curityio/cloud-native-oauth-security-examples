@@ -1,6 +1,6 @@
 # Troubleshoot External Connectivity
 
-On a development computer, we want you to connect to the API gateway with Kubernetes behaviors that match deployed environments.
+Ee want you to connect from a local computer to the API gateway with Kubernetes behaviors that match deployed environments.
 
 ## Cloud Provider KIND
 
@@ -144,5 +144,3 @@ Whenever our deployments instruct you to update your `/etc/hosts` file you must 
 ```text
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
-
-Under the hood, KIND again performs a routing from port `127.0.0.1:443` to port `127.0.0.1:30000` and then to the Kubernetes service.
