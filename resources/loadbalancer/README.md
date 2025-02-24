@@ -67,7 +67,7 @@ curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:4
 
 ## Extra Port Mapping
 
-If you cannot get cloud-provider-kind to work you can use [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) instead.\
+If you cannot get cloud-provider-kind to work you can use [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) to enable a working connection.\
 First, update the [cluster.yaml file](../base/cluster.yaml) so that the first worker node receives all HTTPS requests from the host computer.
 
 ```yaml
