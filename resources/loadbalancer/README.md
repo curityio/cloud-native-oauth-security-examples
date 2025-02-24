@@ -144,3 +144,5 @@ Whenever our deployments instruct you to update your `/etc/hosts` file you must 
 ```text
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
+
+Under the hood, KIND again performs a routing from port `127.0.0.1:443` to port `127.0.0.1:30000` and then to the Kubernetes service.
