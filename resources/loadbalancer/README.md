@@ -47,7 +47,7 @@ curl -i -k https://api.democluster.example
 On these platforms, Docker runs within a virtual machine that does not expose any ports to the host computer.\
 Therefore, cloud-provider-kind uses Docker port mapping to add a tunnel that establishes a connection:
 
-- The loadbalancer exposes an ephemeral port such as `63574` to the host computer.
+- The loadbalancer container exposes an ephemeral port such as `63574` to the host computer.
 - When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel first routes to `127.0.1:63574`.
 - From there the request routes to `172.18.0.5:443` within the kind network and reaches the Kubernetes service.
  
