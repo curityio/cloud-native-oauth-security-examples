@@ -34,7 +34,7 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
-The cloud-provider-kind also adds the IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
+The cloud-provider-kind also adds the external IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
 You can run commands like these to connect, where the second command requires an entry in the host computer's `/etc/hosts` file.
 
 ```bash
