@@ -139,7 +139,8 @@ curl -i -k https://127.0.0.1 -H "Host: api.democluster.example"
 curl -i -k https://api.democluster.example
 ```
 
-Whenever our deployments instruct you to update your `/etc/hosts` file you must use the IP address `127.0.0.1`.
+When you use extra port mapping the external domain names always resolve to the IP address `127.0.0.1`.\
+Therefore, whenever our deployments instruct you to update your `/etc/hosts` file, use `127.0.0.1` as the IP address.
 
 ```text
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
