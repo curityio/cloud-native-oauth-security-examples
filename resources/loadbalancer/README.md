@@ -4,7 +4,8 @@ On a development computer, we aim to connect to the API gateway in the most stan
 
 ## Cloud Provider KIND
 
-When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it creates a Docker load balancer for each Kubernetes service of type `LoadBalancer`.
+When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it creates a Docker load balancer for each Kubernetes service of type `LoadBalancer`.\
+The load balancer runs outside of the Kubernetes cluster.
 
 ```text
 CONTAINER ID   IMAGE                      PORTS                     NAMES
@@ -12,7 +13,7 @@ bcc56c332115   envoyproxy/envoy:v1.30.1   0.0.0.0:63574->443/tcp    kindccm-5445
 ```
 
 The loadbalancer runs on the KIND Docker bridge network and gets assigned an IP address such as 172.18.0.5.\
-You can view Docker networking details with commands of the following form.
+You can view lower level Docker networking details with commands of the following form.
 
 ```bash
 docker inspect network kind
@@ -34,7 +35,7 @@ kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.
 ```
 
 The cloud-provider-kind also adds the IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
-You can run commands of this form to connect, where the second command requires a mapping for the IP address in the host computer's `/etc/hosts` file.
+You can run commands like these to connect, where the second command requires an entry in the host computer's `/etc/hosts` file.
 
 ```bash
 curl -i -k https://172.18.0.5 -H "Host: api.democluster.example"
@@ -46,11 +47,12 @@ curl -i -k https://api.democluster.example
 On these platforms, Docker runs within a virtual machine that does not expose any ports to the host computer.\
 Therefore, cloud-provider-kind uses Docker port mapping to add a tunnel that establishes a connection:
 
-- The loadbalancer Docker container exposes an ephemeral port such as `63574` that resolves to a value like `172.18.0.5:443` within the kind network.
-- When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel routes to `127.0.1:63574` and from there to the Kubernetes service.
-
+- The loadbalancer exposes an ephemeral port such as `63574` to the host computer.
+- When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel first routes to `127.0.1:63574`.
+- From there the request routes to `172.18.0.5:443` within the kind network and reaches the Kubernetes service.
+ 
 This should work on most computers, but support remains a little experimental.\
-On some computers, it is possible that infrastructure may prevent the tunnel from working.\
+On some macOS and Windows computers, the tunnel could fail to work for various infrastructure reasons.\
 You can then only connect to a Kubernetes service using the ephemeral port, which is not our intent.
 
 ```bash
@@ -87,8 +89,7 @@ nodes:
     containerPath: /etc/systemd/system/containerd.service
 ```
 
-The first Kubernetes worker node then receives all HTTPS requests from outside the cluster.\
-You must update the [API Gateway Helm values file](../apigateway/helm-values-template.yaml) so that all API gateway pods run on the first worker node.
+You must also update the [API Gateway Helm values file](../apigateway/helm-values-template.yaml) so that all API gateway pods run on the first worker node.
 
 ```yaml
 image:
