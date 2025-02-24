@@ -146,7 +146,7 @@ Therefore, whenever our deployments instruct you to update your `/etc/hosts` fil
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
-You can run the following command on the first Kubernetes worker node.\
+You can run the following command to view the details of the first Kubernetes worker node.\
 The output shows that an internal port of 30000 is exposed to the host computer as port 443.
 
 ```bash
