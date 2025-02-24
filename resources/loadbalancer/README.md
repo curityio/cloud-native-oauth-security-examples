@@ -1,6 +1,6 @@
 # Troubleshoot External Connectivity
 
-On a development computer, we aim to connect to the API gateway in the most standard way, to match real Kubernetes environments.
+On a development computer, we want you to connect to the API gateway with Kubernetes behaviors that match deployed environments.
 
 ## Cloud Provider KIND
 
