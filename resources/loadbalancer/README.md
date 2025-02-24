@@ -144,3 +144,10 @@ Whenever our deployments instruct you to update your `/etc/hosts` file you must 
 ```text
 127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
+
+You can run the following command on the first Kubernetes worker node.\
+The output shows that an internal port of 30000 is exposed to the host computer as port 443.
+
+```bash
+docker inspect example-worker
+```
