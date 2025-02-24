@@ -4,64 +4,60 @@ On a development computer, we aim to connect to the API gateway in the most stan
 
 ## Cloud Provider KIND
 
-When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it adds an external IP address to the [host computer loopback network interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go).\
-The Kubernetes API gateway uses it as an external IP address that you can view with the following command:
-
-```bash
-kubectl get svc -n kong
-```
-
-You should output similar to the following:
-
-```text
-NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT
-kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
-```
-
-When our example deployments instruct you to update the `/etc/hosts` file use the external IP address.\
-You can even run multiple local clusters, each with their own external IP address. 
-
-```text
-172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
-```
-
-You should then be able to connect to deployed components using the hostname expressed in the `HttpRoute` resource.
-
-```bash
-curl -i -k https://api.democluster.example
-```
-
-In some cases you may also need to approve a firewall prompt from the operating system.
-
-```text
-Do you want the application “cloud-provider-kind” to accept incoming network connections?
-```
-
-## Troubleshooting Failed Connections
-
-The cloud-provider-kind spins up a local Docker load balancer for each Kubernetes service of type `LoadBalancer`.
+When you run [cloud-provider-kind](https://github.com/kubernetes-sigs/cloud-provider-kind) it creates a Docker load balancer for each Kubernetes service of type `LoadBalancer`.
 
 ```text
 CONTAINER ID   IMAGE                      PORTS                     NAMES
 bcc56c332115   envoyproxy/envoy:v1.30.1   0.0.0.0:63574->443/tcp    kindccm-544599e9a77f
 ```
 
-On macOS and Windows, cloud-provider-kind also creates an HTTP tunnel using an ephmeral port like 63574.\
-The tunnel routes requests from the local loopback network interface to the KIND docker network.
+The loadbalancer runs on the KIND Docker bridge network and gets assigned an IP address such as 172.18.0.5.\
+You can view Docker networking details with commands of the following form.
 
 ```bash
-docker network inspect kind
+docker inspect network kind
+docker inspect bcc56c332115
 ```
 
-You should be able to call through the load balancer using port 443 or the ephemeral port that the tunnel uses:
+Next, cloud-provider-kind gets the loadbalancer container's external IP address and patches the Kubernetes service.\
+You can see the result if you run the following command.
 
 ```bash
+kubectl get svc -n kong
+```
+
+You should see output similar to the following:
+
+```text
+NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTERNAL-IP   PORT
+kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
+```
+
+The cloud-provider-kind also adds the IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
+You can run commands of this form to connect, where the second command requires a mapping for the IP address in the host computer's `/etc/hosts` file.
+
+```bash
+curl -i -k https://172.18.0.5 -H "Host: api.democluster.example"
 curl -i -k https://api.democluster.example
-curl -i -k https://api.democluster.example:63574
 ```
 
-On macOS or Windows, cloud-provider-kind is experimental and might fail on some computers when you use port 443.\
-You may get an error like this, where the client tries to initiate an HTTPS connection but the network connection fails.
+## macOS and Windows
+
+On these platforms, Docker runs within a virtual machine that does not expose any ports to the host computer.\
+Therefore, cloud-provider-kind uses Docker port mapping to add a tunnel that establishes a connection:
+
+- The loadbalancer Docker container exposes an ephemeral port such as `63574` that resolves to a value like `172.18.0.5:443` within the kind network.
+- When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel routes to `127.0.1:63574` and from there to the Kubernetes service.
+
+This should work on most computers, but support remains a little experimental.\
+On some computers, it is possible that infrastructure may prevent the tunnel from working.\
+You can then only connect to a Kubernetes service using the ephemeral port, which is not our intent.
+
+```bash
+curl -i -k https://127.0.0.1:63574 -H "Host: api.democluster.example"
+```
+
+If you try to use port 443 you may get an error where the client tries to initiate an HTTPS connection but the network connection fails.
 
 ```text
 curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:443 
@@ -70,8 +66,7 @@ curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:4
 ## Extra Port Mapping
 
 If you cannot get cloud-provider-kind to work you can use [extraPortMapping](https://kind.sigs.k8s.io/docs/user/ingress/#option-2-extraportmapping) instead.\
-First, update the [cluster.yaml file](../base/cluster.yaml) to the following content before creating the cluster.\
-The first Kubernetes worker node then receives all HTTPS requests from outside the cluster.
+First, update the [cluster.yaml file](../base/cluster.yaml) to the following content before creating the cluster.
 
 ```yaml
 kind: Cluster
@@ -92,8 +87,8 @@ nodes:
     containerPath: /etc/systemd/system/containerd.service
 ```
 
-Next, update the [API Gateway Helm values file](../apigateway/helm-values-template.yaml) to the following content before deploying the gateway.\
-The scheduler then runs all API gateway pods on the first Kubernetes worker node, which receives all external HTTPS traffic.
+The first Kubernetes worker node then receives all HTTPS requests from outside the cluster.\
+You must update the [API Gateway Helm values file](../apigateway/helm-values-template.yaml) so that all API gateway pods run on the first worker node.
 
 ```yaml
 image:
@@ -123,12 +118,6 @@ env:
   nginx_http_lua_shared_dict: 'phantom-token 10m'
 ```
 
-You can then use your loopback IP address whenever our deployments instruct you to update your `/etc/hosts` file.
-
-```text
-127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
-```
-
 The following command will then show different output.
 
 ```bash
@@ -142,8 +131,15 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                NodePort       10.96.4.208     <none>        443:32368/TCP
 ```
 
-You will then be able to establish a working connection to deployed components.
+You can then initiate requests to external endpoints on port 443:
 
 ```bash
+curl -i -k https://127.0.0.1 -H "Host: api.democluster.example"
 curl -i -k https://api.democluster.example
+```
+
+Whenever our deployments instruct you to update your `/etc/hosts` file you must use the IP address `127.0.0.1`.
+
+```text
+127.0.0.1 api.democluster.example login.democluster.example admin.democluster.example
 ```
