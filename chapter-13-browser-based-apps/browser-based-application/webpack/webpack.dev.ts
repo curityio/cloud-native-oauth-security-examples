@@ -21,14 +21,22 @@ import {merge} from 'webpack-merge';
 import baseConfig from './webpack.common.js';
 
 /*
- * A pure SPA experience is used for web development, using a lightweight static server
+ * During development, use a content security policy that restricts the allowed domains.
+ * The SPA only allows fetch requests to its APIs and only runs scripts from its web origin.
  */
-const dirname = process.cwd();
-let devConfig: webpack.Configuration = {
-    mode: 'development',
-};
+let policy = "default-src 'none';";
+policy += " script-src 'self';";
+policy += " connect-src 'self' https://api.webapp.example;";
+policy += " child-src 'self';";
+policy += " img-src 'self';";
+policy += " style-src 'self' https://cdn.jsdelivr.net;";
+policy += " object-src 'none';";
+policy += " frame-ancestors 'none';";
+policy += " base-uri 'self';";
+policy += " form-action 'self'";
 
-let devServerConfig: WebpackDevServerConfiguration = {
+const dirname = process.cwd();
+let devServer: WebpackDevServerConfiguration = {
     server: {
         type: 'https',
         options: {
@@ -47,7 +55,24 @@ let devServerConfig: WebpackDevServerConfiguration = {
     allowedHosts: [
         'www.webapp.example'
     ],
+    /*
+    * During development the app sets a strong content security policy.
+    * Equivalent headers should also be set when the SPA is deployed to its production web host.
+    * Also consider using other recommended security headers in development and deployed systems.
+    * - https://infosec.mozilla.org/guidelines/web_security
+    */
+    headers: [
+        {
+            key: 'content-security-policy',
+            value: policy,
+        },
+    ],
 };
 
-devConfig.devServer = devServerConfig;
+let devConfig: webpack.Configuration = {
+    mode: 'development',
+    devtool: 'source-map',
+    devServer,
+};
+
 export default merge(baseConfig, devConfig);
