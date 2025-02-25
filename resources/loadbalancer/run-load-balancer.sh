@@ -71,7 +71,7 @@ if [ "$PLATFORM" == 'darwin' ]; then
   sudo ./cloud-provider-kind -v 7
 elif [ "$PLATFORM" == 'windows' ]; then
   echo 'Running a Windows administrator shell so that cloud-provider-kind can update the local loopback network ...'
-  sudo ./cloud-provider-kind -v 7
+  ./cloud-provider-kind -v 7
 else
   echo 'Running cloud-provider-kind on a Linux-based system ...'
   ./cloud-provider-kind -v 7

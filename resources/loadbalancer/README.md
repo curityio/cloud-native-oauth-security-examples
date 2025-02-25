@@ -43,27 +43,37 @@ curl -i -k https://api.democluster.example
 
 ## macOS and Windows
 
-On these platforms, Docker runs within a virtual machine that does not expose any ports to the host computer.\
+On macOS and Windows, Docker runs within a virtual machine that does not expose any ports to the host computer.\
 Therefore, cloud-provider-kind uses Docker port mapping to add a tunnel that establishes a connection:
 
 - The loadbalancer container exposes an ephemeral port such as `63574` to the host computer.
-- The cloud-provider-kind adds the external IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.
+- The cloud-provider-kind adds the external IP address to the host computer's loopback interface to enable connectivity.
 - When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel first routes to `127.0.1:63574`.
 - From there the request routes to `172.18.0.5:443` within the kind network and reaches the Kubernetes service.
  
-This should work on most computers, but support remains a little experimental.\
-On some macOS and Windows computers, the tunnel could fail to work for various infrastructure reasons.\
-You can then only connect to a Kubernetes service using the ephemeral port, which is not our intent.
-
-```bash
-curl -i -k https://127.0.0.1:63574 -H "Host: api.democluster.example"
-```
-
-If you try to use port 443 you may get an error where the client tries to initiate an HTTPS connection but the network connection fails.
+On some computers the tunnel's network connection may fail.\
+For example, the client may get an error like this when it tries to initiate an HTTPS connection.
 
 ```text
 curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 172.18.0.2:443 
 ```
+
+In some cases, the IP address may already exist on the loopback network interface.\
+On macOS, use [ifconfig commands](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) like these to check settings and clean up if required, before running cloud-provider-kind:
+
+```bash
+ifconfig lo0
+ifconfig lo0 -alias 172.18.0.5
+```
+
+Or on Windows, use [netsh commands](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_windows.go) like these to check settings and clean up if required, before running cloud-provider-kind:
+
+```bash
+netsh interface ip show address loopback
+netsh interface ip delete address loopback 172.18.0.5 255.255.255.255
+```
+
+Connectivity should work on most computers, but support remains a little experimental.
 
 ## Extra Port Mapping
 
