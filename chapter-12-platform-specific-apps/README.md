@@ -69,6 +69,10 @@ Follow the READMEs specific to each client:
 - [OAuth-Secured Android Mobile App](android-app/README.md)
 - [OAuth-Secured iOS Mobile App](ios-app/README.md)
 
+### Troubleshoot Connectivity if Required
+
+If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
+
 ### Tear Down the Cluster
 
 Run this command to free resources:

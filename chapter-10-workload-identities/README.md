@@ -122,6 +122,10 @@ See the [API setup](./demoapi/README.md) documentation for details of the config
 ./9-deploy-api.sh
 ```
 
+### Troubleshoot Connectivity if Required
+
+If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
+
 ### Free Resources
 
 Finally, once you have finished testing, free resources by running these commands:
