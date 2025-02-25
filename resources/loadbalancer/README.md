@@ -34,7 +34,6 @@ NAMESPACE     NAME                           TYPE           CLUSTER-IP      EXTE
 kong          kong-kong-proxy                LoadBalancer   10.96.4.208     172.18.0.5    443:32368/TCP
 ```
 
-The cloud-provider-kind also adds the external IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
 You can run commands like these to connect, where the second command requires an entry in the host computer's `/etc/hosts` file.
 
 ```bash
@@ -48,6 +47,7 @@ On these platforms, Docker runs within a virtual machine that does not expose an
 Therefore, cloud-provider-kind uses Docker port mapping to add a tunnel that establishes a connection:
 
 - The loadbalancer container exposes an ephemeral port such as `63574` to the host computer.
+- The cloud-provider-kind adds the external IP address to [the host computer's loopback interface](https://github.com/kubernetes-sigs/cloud-provider-kind/blob/main/pkg/loadbalancer/address_darwin.go) to enable connectivity.\
 - When you call `172.18.0.5:443` from outside the cluster, a TCP tunnel first routes to `127.0.1:63574`.
 - From there the request routes to `172.18.0.5:443` within the kind network and reaches the Kubernetes service.
  
