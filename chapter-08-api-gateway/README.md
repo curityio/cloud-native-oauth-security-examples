@@ -58,7 +58,7 @@ export LICENSE_FILE_PATH='license.json'
 - Login to the Admin UI at `https://admin.democluster.example/admin` with credentials `admin / Password1`
 - Locate OpenId Connect metadata at `https://login.democluster.example/oauth/v2/oauth-anonymous/.well-known/openid-configuration`
 
-To avoid browser SSL trust warnings you can trust the following development root certificate.\
+Also ensure that you trust the following development root certificate.\
 For example, on macOS use Keychain Access to add it to the system keystore.
 
 ```text
@@ -99,7 +99,11 @@ KONG_POD=$(kubectl -n kong get pod -o jsonpath="{.items[0].metadata.name}")
 kubectl -n kong logs -f $KONG_POD -c proxy
 ```
 
-### 6. Tear Down the Cluster
+### 6. Troubleshoot Connectivity if Required
+
+If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
+
+### 7. Tear Down the Cluster
 
 Run this command to free resources:
 

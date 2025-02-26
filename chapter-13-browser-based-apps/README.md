@@ -82,7 +82,8 @@ The following script deploys the OAuth Agent and configures the OAuth Proxy to r
 
 ### Run the Browser-based Application
 
-Then run the [Browser-based Application](browser-based-application/README.md) which uses the React framework.
+Then run the [Browser-based Application](browser-based-application/README.md) which uses the React framework.\
+If you run into external connectivity problems, see the [Connectivity README](../resources/loadbalancer/README.md) document.
 
 ## Backend for Frontend Components
 
