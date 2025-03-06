@@ -1,7 +1,7 @@
 # Upgrade to Passwordless User Authentication
 
 Follow these steps to harden the user authentication of the book's frontend code examples.\
-First, ensure that you have already deployed the backend components from [chapter 12](../chapter-12-platform-specific-apps/README.md).
+First, ensure that you have already deployed the backend components, e.g from [chapter 13](../chapter-13-browser-based-apps/README.md).
 
 ## Deploy an SMTP Server
 
