@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #
 # First download a community edition license for the Curity Identity Server
 #
-./license-downloader.sh
+./download-license.sh
 if [ $? -ne 0 ]; then
   exit 1
 fi
