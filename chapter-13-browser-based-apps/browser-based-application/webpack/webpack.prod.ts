@@ -18,22 +18,6 @@ import webpack from 'webpack';
 import {merge} from 'webpack-merge';
 import baseConfig from './webpack.common.js';
 
-/*
- * When deploying to a real web host, you should include recommended web security headers and a content security policy.
- * This should only allow access to trusted hosts, like the backend for frontend.
- * https://owasp.org/www-project-secure-headers/
- */
-let policy = "default-src 'none';";
-policy += " script-src 'self';";
-policy += " connect-src 'self' https://api.webapp.example;";
-policy += " child-src 'self';";
-policy += " img-src 'self';";
-policy += " style-src 'self' https://cdn.jsdelivr.net;";
-policy += " object-src 'none';";
-policy += " frame-ancestors 'none';";
-policy += " base-uri 'self';";
-policy += " form-action 'self'";
-
 const prodConfig: webpack.Configuration = {
   mode: 'production',
 };
