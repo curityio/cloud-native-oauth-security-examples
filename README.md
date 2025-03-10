@@ -29,8 +29,8 @@ The examples show how to implement the designs described in the book's written t
 The deployments default to using the free edition of the Curity Identity Server.\
 Alternatively, you could adapt deployments to use your preferred authorization server.
 
-To use the Curity Identity Server, a script prompts you to get an access token and then download a license file.\
-To get an access token, a CLI runs a code flow and you can verify any email address to authenticate.
+To use the Curity Identity Server, a script gets an access token with which to download a community edition license.\
+To get an access token, a CLI runs a code flow and you must verify your email address to authenticate.
 
 ## License
 
