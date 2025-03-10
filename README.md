@@ -27,8 +27,10 @@ The examples show how to implement the designs described in the book's written t
 ## Authorization Server
 
 The deployments default to using the free edition of the Curity Identity Server.\
-To use it you must download a license file from the [Curity Developer Portal](https://developer.curity.io/community-edition/).\
 Alternatively, you could adapt deployments to use your preferred authorization server.
+
+To use the Curity Identity Server, a script prompts you to get an access token and then download a license file.\
+To get an access token, a CLI runs a code flow and you can verify any email address to authenticate.
 
 ## License
 

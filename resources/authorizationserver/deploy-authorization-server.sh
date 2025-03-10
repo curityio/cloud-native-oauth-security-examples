@@ -6,13 +6,21 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [ "$LICENSE_FILE_PATH" == '' ]; then
-  echo '*** Please provide a LICENSE_FILE_PATH environment variable for the Curity Identity Server'
+#
+# First download a community edition license for the Curity Identity Server
+#
+./license-downloader.sh
+if [ $? -ne 0 ]; then
   exit 1
 fi
-LICENSE_KEY=$(cat $LICENSE_FILE_PATH | jq -r .License)
+
+#
+# Get the license key
+#
+LICENSE_FILE_PATH="$(pwd)/license.json"
+LICENSE_KEY="$(cat $LICENSE_FILE_PATH | jq -r .License)"
 if [ "$LICENSE_KEY" == '' ]; then
-  echo '*** An invalid license file was provided for the Curity Identity Server'
+  echo '*** Unable to find a valid license for the community edition of the Curity Identity Server'
   exit 1
 fi
 
