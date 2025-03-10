@@ -17,6 +17,16 @@ if [ "$LICENSE_KEY" == '' ]; then
 fi
 
 #
+# For simplicity the example deployment recreates all resources every time
+#
+kubectl delete namespace authorizationserver 2>/dev/null
+kubectl create namespace authorizationserver
+if [ $? -ne 0 ]; then
+  echo '*** Problem encountered creating the authorizationserver namespace'
+  exit 1
+fi
+
+#
 # Prepare a parameterized configuration that protects secure values
 #
 ./protect-secrets.sh
