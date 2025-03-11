@@ -30,7 +30,7 @@ The deployments default to using the free edition of the Curity Identity Server.
 Alternatively, you could adapt deployments to use your preferred authorization server.
 
 To use the Curity Identity Server, a script gets an access token with which to download a community edition license.\
-To get an access token, a CLI runs a code flow and you must verify your email address to authenticate.
+To get an access token, a CLI runs a code flow where you receive a prompt to provide your email address as an identifier.
 
 ## License
 

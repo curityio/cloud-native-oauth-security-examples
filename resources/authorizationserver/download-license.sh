@@ -76,8 +76,8 @@ fi
 # Inform the user, who can use their development or work email to get a community edition license
 #
 echo 'This script gets a community edition license for the Curity Identity Server.'
-echo 'A CLI runs a code flow to get an access token with which to download the license.'
-echo 'The flow uses email authentication and you must verify your email address - press a key to continue ...'
+echo 'A CLI will run a code flow in the system browser to get an access token with which to download the license.'
+echo 'Press a key to continue ...'
 read -n 1
 
 #
