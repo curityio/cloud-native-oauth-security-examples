@@ -168,7 +168,3 @@ Or you can clean all user accounts from the authorization server with this comma
 ```bash
 npm run delete
 ```
-
-## License
-
-This project is copyright &#169; 2024 Curity AB. It is licensed under the [Apache v. 2](../LICENSE).
