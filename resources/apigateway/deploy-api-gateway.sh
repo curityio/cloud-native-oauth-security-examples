@@ -13,6 +13,11 @@ kubectl delete namespace kong 2>/dev/null
 kubectl create namespace kong
 
 #
+# Add a label to the API gateway namespace to satisfy the network policy
+#
+kubectl label namespace kong name=kong
+
+#
 # Build the custom docker image with plugin dependencies
 #
 docker build --no-cache -t custom-kong:1.0.0 .
