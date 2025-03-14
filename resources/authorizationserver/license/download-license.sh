@@ -10,9 +10,9 @@ LICENSE_FILE_PATH='./license.json'
 CLI_VERSION='1.0.0'
 
 #
-# Return 1 (true) if the user has no license file or one that is corrupt
+# Return 1 (true) if the user has no license file or it is expired
 #
-function isLicenseMissing() {
+function requiresLicenseDownload() {
 
   if [ ! -f "$LICENSE_FILE_PATH" ]; then
     echo 1
@@ -66,10 +66,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+if [ $(requiresLicenseDownload) == 0 ]; then
+  exit 0
+fi
+
 #
 # Inform the user the first time they deploy the Curity Identity Server that a code flow will run
 #
-if [ $(isLicenseMissing) == 1 ]; then
+if [ $(requiresLicenseDownload) == 0 ]; then
   echo 'This script gets a community edition license for the Curity Identity Server.'
   echo 'A CLI will run a code flow in the system browser to get an access token with which to download the license.'
   echo 'Press a key to continue ...'
@@ -112,7 +116,7 @@ fi
 #
 # Check that there is now a valid license on disk
 #
-if [ $(isLicenseMissing) == 1 ]; then
+if [ $(requiresLicenseDownload) == 1 ]; then
   echo 'The license file download did not complete successfully'
   exit 1
 fi
