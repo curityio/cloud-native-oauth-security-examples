@@ -60,13 +60,13 @@ Next deploy the Kong API gateway to enable ingress into the cluster:
 The script outputs the external IP address of the API gateway with a line similar to this:
 
 ```text
-The cluster's external IP address is 172.19.0.5 ...
+The cluster's external IP address is 172.18.0.5 ...
 ```
 
 Add these entries to your computer's `/etc/hosts` file for that IP address:
 
 ```text
-172.19.0.5 api.democluster.example login.democluster.example admin.democluster.example
+172.18.0.5 api.democluster.example login.democluster.example admin.democluster.example
 ```
 
 To avoid browser SSL trust warnings you can trust the following development root certificate.\
