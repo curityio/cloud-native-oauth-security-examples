@@ -112,7 +112,3 @@ The API then uses [environment variables](deployment/deployment-code.yaml) that 
 ./deployment/build.sh
 ./deployment/deploy.sh
 ```
-
-## License
-
-This project is copyright &#169; 2024 Curity AB. It is licensed under the [Apache v. 2](../LICENSE).
