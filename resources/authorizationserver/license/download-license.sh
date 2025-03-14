@@ -67,32 +67,34 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Don't run the CLI if the user has copied in a license file
+# Check if we need to run the CLI
 #
-if [ -f "$LICENSE_FILE_PATH" ]; then
+if [ $(requiresLicenseDownload) == 0 ]; then
   exit 0
 fi
 
 #
-# Inform the user the first time they deploy the Curity Identity Server that a code flow will run
+# Inform the user before running the CLI
 #
-if [ $(requiresLicenseDownload) == 0 ]; then
-  echo 'This script gets a community edition license for the Curity Identity Server.'
-  echo 'A CLI will run a code flow in the system browser to get an access token with which to download the license.'
-  echo 'Press a key to continue ...'
-  read -n 1
-fi
+echo 'This script gets a community edition license for the Curity Identity Server.'
+echo 'A CLI will run a code flow in the system browser to get an access token with which to download the license.'
+echo 'Press a key to continue ...'
+read -s -n 1
 
-DOWNLOAD_FILENAME="$(getLicenseToolDownloadFileName)"
-if [ ! -f "$DOWNLOAD_FILENAME" ]; then
+#
+# Download the CLI if required
+#
+if [ ! -f ./curity-book-cli ]; then
 
   #
   # Download the executable
   #
+  echo 'Downloading the license file CLI ...'
+  DOWNLOAD_FILENAME="$(getLicenseToolDownloadFileName)"
   DOWNLOAD_BASE_URL="https://github.com/curityio/book-license-cli/releases/download/$CLI_VERSION"
-  curl -s -L -O "$DOWNLOAD_BASE_URL/$DOWNLOAD_FILENAME"
-  if [ $? -ne 0 ]; then
-    echo 'Problem encountered downloading the license file utility'
+  HTTP_STATUS=$(curl -s -L -O "$DOWNLOAD_BASE_URL/$DOWNLOAD_FILENAME" -w '%{http_code}')
+  if [ "$HTTP_STATUS" != '200' ]; then
+    echo "Problem encountered downloading the license file CLI, status: $HTTP_STATUS"
     exit 1
   fi
 
@@ -107,7 +109,7 @@ if [ ! -f "$DOWNLOAD_FILENAME" ]; then
 fi
 
 #
-# Execute the license tool to run a code flow and wait for the response
+# Execute the CLI to run a code flow and wait for the response
 # 
 ./curity-book-cli
 if [ $? -ne 0 ]; then
