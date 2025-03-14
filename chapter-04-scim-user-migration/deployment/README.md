@@ -9,22 +9,6 @@ Ensure that your local computer has these resources installed:
 - A [Docker Engine](https://docs.docker.com/engine/install)
 - The [jq](https://jqlang.github.io/jq/download) tool
 
-## Get a License File for the Curity Identity Server
-
-Run the following command from the root folder of this GitHub repository.\
-It triggers a code flow that uses email authentication to get an access token.\
-A CLI uses the access token to download the license file:
-
-```bash
-./resources/authorizationserver/download-license.sh
-```
-
-Once the download completes, find the license file at the following location:
-
-```bash
-./resources/authorizationserver/download-license.sh
-```
-
 ## Deploy the Authorization Server
 
 Run the following commands to deploy a Docker based authorization server:
@@ -35,7 +19,21 @@ docker pull curity.azurecr.io/curity/idsvr
 docker compose --project-name scim up
 ```
 
-## Do the Initial Setup
+## Get a License File for the Curity Identity Server
+
+Run the following script from the root folder of this GitHub repository.\
+
+```bash
+./resources/authorizationserver/license/download-license.sh
+```
+
+Once the download completes, find the license file at the following location:
+
+```bash
+./resources/authorizationserver/license/license.json
+```
+
+## Complete the Initial Setup
 
 Run to the admin UI at `https://localhost:6749/admin` and ignore certificate warnings due to the self-signed SSL certificate.\
 Sign in with user `admin` and the password from the docker compose file.\
