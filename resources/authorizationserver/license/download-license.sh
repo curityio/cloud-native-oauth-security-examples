@@ -66,7 +66,10 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-if [ $(requiresLicenseDownload) == 0 ]; then
+#
+# Don't run the CLI if the user has copied in a license file
+#
+if [ -f "$LICENSE_FILE_PATH" ]; then
   exit 0
 fi
 
@@ -80,15 +83,14 @@ if [ $(requiresLicenseDownload) == 0 ]; then
   read -n 1
 fi
 
-#
-# Download the license tool if required
-#
 DOWNLOAD_FILENAME="$(getLicenseToolDownloadFileName)"
 if [ ! -f "$DOWNLOAD_FILENAME" ]; then
 
-  cp ~/Downloads/$DOWNLOAD_FILENAME . 
-  #DOWNLOAD_BASE_URL='https://bitbucket.org/curity/book-license-cli/downloads'
-  #curl -L -O "$DOWNLOAD_BASE_URL/$DOWNLOAD_FILENAME"
+  #
+  # Download the executable
+  #
+  DOWNLOAD_BASE_URL="https://github.com/curityio/book-license-cli/releases/download/$CLI_VERSION"
+  curl -s -L -O "$DOWNLOAD_BASE_URL/$DOWNLOAD_FILENAME"
   if [ $? -ne 0 ]; then
     echo 'Problem encountered downloading the license file utility'
     exit 1
@@ -97,7 +99,7 @@ if [ ! -f "$DOWNLOAD_FILENAME" ]; then
   #
   # Unzip the executable
   #
-  unzip "$DOWNLOAD_FILENAME"
+  unzip -o "$DOWNLOAD_FILENAME"
   if [ $? -ne 0 ]; then
     echo '*** Problem encountered unpacking the license tool'
     exit 1
