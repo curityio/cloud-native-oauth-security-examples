@@ -1,13 +1,16 @@
 # General
 .settings/
 .DS_Store
-license.json
 *democluster*
 *.jar
 *.tar.gz
 *.crt
 download
 curlresponse.txt
+
+# License downloads
+curity-book-cli*
+license.json
 
 # Build and Release Folders
 build/
