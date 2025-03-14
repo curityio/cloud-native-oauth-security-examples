@@ -541,6 +541,8 @@
         <jdbc xmlns="https://curity.se/ns/ext-conf/jdbc">
           <attribute-query>SELECT username as email, attributes as data FROM accounts WHERE username = :subject</attribute-query>
           <connection-string>data:text/plain;aes,v:S.TkFYSHNUcDJBZXFiZ0k1Tg==.SzurxSHbgEpcdHj6XPCuqA==.4JSRI3Nx6lpBNK5OW54vbGPFrUCrKRtYZ5gfHJnQ30AzW_uQvpmVYcBGbALz-UMu.xoHLVVOyBh-VVuAd_n6rrrH3OY9cVe66-TMg0URXVX0=</connection-string>
+          <standard-credentials-mode>
+          </standard-credentials-mode>
           <driver>org.postgresql.Driver</driver>
           <password>data:text/plain;aes,v:S.NU9EaDhZS3BJRm5rcGVMNw==.GjelIFRvGm7WMhytrNtqWg==.PCAgqAXjftVzOHiRXnglVA==.Fz2ZWh-f8dcETI5ERsjwu0I69wdZP8AJS_sdwxyypbI=</password>
           <username>postgres</username>
