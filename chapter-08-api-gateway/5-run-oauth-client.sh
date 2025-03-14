@@ -19,7 +19,8 @@ HTTP_STATUS=$(curl -s -k 'https://login.democluster.example/oauth/v2/oauth-token
     -d 'grant_type=client_credentials' \
     -o $RESPONSE_FILE -w '%{http_code}')
 if [ "$HTTP_STATUS" != '200' ]; then
-  echo 'Problem encountered getting an access token'
+  echo "Problem encountered getting an access token, status: $HTTP_STATUS"
+  cat "$RESPONSE_FILE"
   exit 1
 fi
 
@@ -36,7 +37,8 @@ HTTP_STATUS=$(curl -s -k 'https://api.democluster.example/minimalapi' \
     -H "authorization: Bearer $OPAQUE_ACCESS_TOKEN" \
     -o $RESPONSE_FILE -w '%{http_code}')
 if [ "$HTTP_STATUS" != '200' ]; then
-  echo 'Problem encountered calling the API'
+  echo "Problem encountered calling the API, status: $HTTP_STATUS"
+  cat "$RESPONSE_FILE"
   exit 1
 fi
 JSON="$(cat $RESPONSE_FILE)"
