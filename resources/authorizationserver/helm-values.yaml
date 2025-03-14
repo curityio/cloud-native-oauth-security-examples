@@ -22,7 +22,6 @@ curity:
   config:
     uiEnabled: true
     skipInstall: true
-    encryptionKey: fc32195f576201840ebe1fbd2704c5e40a9a4978a5e0146886743022171e89d7
     configuration:
       - configMapRef:
           name: idsvr-configbackup
