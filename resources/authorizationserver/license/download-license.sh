@@ -7,6 +7,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 LICENSE_FILE_PATH='./license.json'
+CLI_VERSION='1.0.0'
 
 #
 # Return 1 (true) if the user has no license file or one that is corrupt
@@ -18,25 +19,25 @@ function isLicenseMissing() {
     return
   fi
 
-  VALID_LICENSE=$(cat $LICENSE_FILE_PATH | jq 'has("License")')
-  if [ "$VALID_LICENSE" != 'true' ]; then
-    rm "$LICENSE_FILE_PATH"
-    echo 1
-    return
-  fi
+  #VALID_LICENSE=$(cat $LICENSE_FILE_PATH | jq 'has("License")')
+  #if [ "$VALID_LICENSE" != 'true' ]; then
+  #  rm "$LICENSE_FILE_PATH"
+  #  echo 1
+  #  return
+  #fi
 
   echo 0
 }
 
 #
-# Download the license tool, which is a CLI that runs a code flow
+# Get the filename of the license tool, which is a CLI that runs a code flow
 #
 function getLicenseToolDownloadFileName() {
 
   if [ "$(uname -m)" == 'arm64' ]; then
-    ARCH='arm64'
+    ARCH='arm'
   else
-    ARCH='amd64'
+    ARCH='x86'
   fi
 
   case "$(uname -s)" in
@@ -53,7 +54,7 @@ function getLicenseToolDownloadFileName() {
       PLATFORM='linux'
     ;;
     esac
-    echo "curity-license-tool-${PLATFORM}-${ARCH}.tar.gz"
+    echo "curity-book-cli-${CLI_VERSION}-${PLATFORM}-${ARCH}.zip"
 }
 
 #
@@ -79,25 +80,25 @@ fi
 # Download the license tool if required
 #
 DOWNLOAD_FILENAME="$(getLicenseToolDownloadFileName)"
-if [ ! -f $DOWNLOAD_FILENAME ]; then
+if [ ! -f "$DOWNLOAD_FILENAME" ]; then
 
-  cp ../../../book-license-cli/curity-book-cli .
-  
-  #curl -s -L -O "https://github.com/curityio/curity-license-tool/releases/1.0.0/$DOWNLOAD_FILENAME"
-  #if [ $? -ne 0 ]; then
-  #  echo 'Problem encountered downloading the license file utility'
-  #  exit 1
-  #fi
+  cp ~/Downloads/$DOWNLOAD_FILENAME . 
+  #DOWNLOAD_BASE_URL='https://bitbucket.org/curity/book-license-cli/downloads'
+  #curl -L -O "$DOWNLOAD_BASE_URL/$DOWNLOAD_FILENAME"
+  if [ $? -ne 0 ]; then
+    echo 'Problem encountered downloading the license file utility'
+    exit 1
+  fi
+
+  #
+  # Unzip the executable
+  #
+  unzip "$DOWNLOAD_FILENAME"
+  if [ $? -ne 0 ]; then
+    echo '*** Problem encountered unpacking the license tool'
+    exit 1
+  fi
 fi
-
-#
-# Unzip the executable
-#
-#tar -zxf $DOWNLOAD_FILENAME
-#if [ $? -ne 0 ]; then
-#  echo '*** Problem encountered unpacking the license tool'
-#  exit 1
-#fi
 
 #
 # Execute the license tool to run a code flow and wait for the response

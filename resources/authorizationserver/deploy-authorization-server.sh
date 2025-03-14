@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #
 # First download a community edition license for the Curity Identity Server
 #
-./download-license.sh
+./license/download-license.sh
 if [ $? -ne 0 ]; then
   exit 1
 fi
@@ -17,7 +17,7 @@ fi
 #
 # Get the license key
 #
-LICENSE_FILE_PATH="$(pwd)/license.json"
+LICENSE_FILE_PATH="$(pwd)/license/license.json"
 LICENSE_KEY="$(cat $LICENSE_FILE_PATH | jq -r .License)"
 if [ "$LICENSE_KEY" == '' ]; then
   echo '*** Unable to find a valid license for the community edition of the Curity Identity Server'
