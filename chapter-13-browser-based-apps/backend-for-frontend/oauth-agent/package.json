@@ -23,13 +23,10 @@
         "node-fetch": "^3.3.2"
     },
     "devDependencies": {
-        "@types/cookie": "^0.6.0",
         "@types/cookie-parser": "^1.4.6",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
         "@types/node-fetch": "^2.6.9",
-        "@types/set-cookie-parser": "^2.4.7",
-        "set-cookie-parser": "^2.6.0",
         "tsx": "^4.19.1",
         "typescript": "^5.7.2"
     }
