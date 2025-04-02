@@ -7,7 +7,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 #
-# First download a community edition license for the Curity Identity Server
+# First download a license for the Curity Identity Server
 #
 ../../../resources/authorizationserver/download-license.sh
 if [ $? -ne 0 ]; then
@@ -18,6 +18,13 @@ fi
 # Get the license key
 #
 LICENSE_FILE_PATH='../../../resources/authorizationserver/license.json'
+if [ ! -f "$LICENSE_FILE_PATH" ]; then
+  LICENSE_FILE_PATH='../../../resources/authorizationserver/license-override.json'
+fi
+
+#
+# The download tool produces a license.json file or the user can copy in a license-override.json
+#
 export LICENSE_KEY="$(cat $LICENSE_FILE_PATH | jq -r .License)"
 if [ "$LICENSE_KEY" == '' ]; then
   echo '*** An invalid license file was provided for the Curity Identity Server'
