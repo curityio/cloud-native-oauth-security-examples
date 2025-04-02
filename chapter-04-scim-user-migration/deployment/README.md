@@ -4,10 +4,7 @@ This example deploys an instance of the free edition of the Curity Identity Serv
 
 ## Prerequisites
 
-Ensure that your local computer has these resources installed:
-
-- A [Docker Engine](https://docs.docker.com/engine/install)
-- The [jq](https://jqlang.github.io/jq/download) tool
+Ensure that your local computer has a Docker engine installed.
 
 ## Deploy the Authorization Server
 

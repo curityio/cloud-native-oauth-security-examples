@@ -15,9 +15,16 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Get the license key
+# The download tool produces a license.json file or the user can copy in a license-override.json
 #
 LICENSE_FILE_PATH="$(pwd)/license/license.json"
+if [ ! -f "$LICENSE_FILE_PATH" ]; then
+  LICENSE_FILE_PATH="$(pwd)/license/license-override.json"
+fi
+
+#
+# Get the license key
+#
 LICENSE_KEY="$(cat $LICENSE_FILE_PATH | jq -r .License)"
 if [ "$LICENSE_KEY" == '' ]; then
   echo '*** Unable to find a valid license for the community edition of the Curity Identity Server'
@@ -85,9 +92,3 @@ if [ $? -ne 0 ]; then
   echo 'Problem encountered running the authorization server Helm chart'
   exit 1
 fi
-
-echo 'Waiting for the pods of the authorization server to reach a ready state ...'
-kubectl wait --namespace authorizationserver \
-  --for=condition=ready pod \
-  --selector=app.kubernetes.io/name=idsvr \
-  --timeout=120s
