@@ -49,7 +49,7 @@ On mobile platforms you may get best results using passkeys on real devices rath
 ## Create a Passkey
 
 When prompted in the authorization server login screen, create a passkey and enter one of the test usernames, `kim` or `dana`.\
-When you receive a prompt for a one-time code, get it from the mock email inbox and paste it in.\
+When you receive a form that prompts for a one-time code, browse to `https://mail.democluster.example` and copy the value into the form.\
 Then follow the operating system prompt to perform the registration ceremony and create a passkey:
 
 ![passkey registration ceremony](images/registration-ceremony.png)

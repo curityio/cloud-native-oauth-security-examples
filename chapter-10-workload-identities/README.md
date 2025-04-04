@@ -85,6 +85,9 @@ See the [authorization server setup](./base/authorizationserver/README.md) docum
 ./5-deploy-authorization-server.sh
 ```
 
+If required, the deployment gets a community edition license file for the Curity Identity Server.\
+See the [License README](https://github.com/curityio/book-license-cli) for details.
+
 ### 6. Run an OAuth Client that uses a JWT as a Client Credential
 
 Next deploy a test workload which will use a Kubernetes service account token as an OAuth client credential.\
