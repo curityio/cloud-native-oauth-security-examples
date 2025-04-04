@@ -5,7 +5,9 @@
 ###############################################################
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
+
 RESPONSE_FILE='curlresponse.txt'
+rm -f "$RESPONSE_FILE"
 
 #
 # Use the client credentials grant to get an opaque access token from the authorization server
