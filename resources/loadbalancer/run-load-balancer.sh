@@ -17,7 +17,7 @@ fi
 #
 # Calculate operating system specific values
 #
-VERSION='0.4.0'
+VERSION='0.6.0'
 if [ "$(uname -m)" == 'arm64' ]; then
   ARCH='arm64'
 else
@@ -67,12 +67,26 @@ fi
 # Run the load balancer, which requires sudo on macOS or a Run as administrator shell on Windows
 #
 if [ "$PLATFORM" == 'darwin' ]; then
+  
+  #
+  # On some macOS computers, adding an ad-hoc signature to the EXE may be required
+  #
   echo 'Grant cloud-provider-kind macOS permissions to update the local loopback network ...'
-  sudo ./cloud-provider-kind -v 7
+  codesign -s - ./cloud-provider-kind
+  sudo ./cloud-provider-kind
+
 elif [ "$PLATFORM" == 'windows' ]; then
+  
+  #
+  # On Windows, make sure you run from an administrator shell
+  #
   echo 'Running a Windows administrator shell so that cloud-provider-kind can update the local loopback network ...'
-  ./cloud-provider-kind -v 7
+  ./cloud-provider-kind
 else
+  
+  #
+  # On Linux, run the tool as a normal user
+  #
   echo 'Running cloud-provider-kind on a Linux-based system ...'
-  ./cloud-provider-kind -v 7
+  ./cloud-provider-kind
 fi
