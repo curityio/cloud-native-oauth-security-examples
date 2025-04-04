@@ -72,7 +72,7 @@ if [ "$PLATFORM" == 'darwin' ]; then
   # On some macOS computers, adding an ad-hoc signature to the EXE may be required
   #
   echo 'Grant cloud-provider-kind macOS permissions to update the local loopback network ...'
-  codesign --force -s - ./cloud-provider-kind
+  codesign -s - ./cloud-provider-kind
   sudo ./cloud-provider-kind
 
 elif [ "$PLATFORM" == 'windows' ]; then
