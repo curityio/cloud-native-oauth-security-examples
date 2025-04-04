@@ -48,7 +48,7 @@ fi
 # Inform the user before running the CLI for the first time
 #
 if [ ! -f ./license.json ]; then
-  echo 'This script gets a license for the Curity Identity Server.'
+  echo 'This script gets a community edition license file for the Curity Identity Server.'
   echo 'A CLI will run a code flow in the system browser to get an access token with which to download the license.'
   echo 'Press a key to continue ...'
   read -s -n 1
