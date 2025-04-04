@@ -27,7 +27,6 @@ The examples show how to implement the designs described in the book's written t
 ## Authorization Server
 
 Deployments default to using the community edition of the Curity Identity Server.\
-Deployment scripts get a license file using a [command line interface (CLI) tool](https://github.com/curityio/book-license-cli).\
 Alternatively, you could adapt deployments to use your preferred authorization server.
 
 ## License

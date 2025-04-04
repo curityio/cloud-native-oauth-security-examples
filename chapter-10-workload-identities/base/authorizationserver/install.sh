@@ -17,9 +17,9 @@ fi
 #
 # Get the license key
 #
-LICENSE_FILE_PATH='../../../resources/authorizationserver/license.json'
+LICENSE_FILE_PATH='../../../resources/authorizationserver/license-override.json'
 if [ ! -f "$LICENSE_FILE_PATH" ]; then
-  LICENSE_FILE_PATH='../../../resources/authorizationserver/license-override.json'
+  LICENSE_FILE_PATH='../../../resources/authorizationserver/license.json'
 fi
 
 #

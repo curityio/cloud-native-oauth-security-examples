@@ -17,9 +17,9 @@ fi
 #
 # The download tool produces a license.json file or the user can copy in a license-override.json
 #
-LICENSE_FILE_PATH="$(pwd)/license/license.json"
+LICENSE_FILE_PATH="$(pwd)/license/license-override.json"
 if [ ! -f "$LICENSE_FILE_PATH" ]; then
-  LICENSE_FILE_PATH="$(pwd)/license/license-override.json"
+  LICENSE_FILE_PATH="$(pwd)/license/license.json"
 fi
 
 #

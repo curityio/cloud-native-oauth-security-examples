@@ -1,6 +1,6 @@
 # Authorization Server Deployment
 
-This example deploys an instance of the free edition of the Curity Identity Server.
+This example deploys an instance of the community edition of the Curity Identity Server.
 
 ## Prerequisites
 
@@ -16,24 +16,18 @@ docker pull curity.azurecr.io/curity/idsvr
 docker compose --project-name scim up
 ```
 
-## Get a License File for the Curity Identity Server
-
-Run the following script from the root folder of this GitHub repository.\
+Then get a community edition license file for the Curity Identity Server.\
+Do so by running the following script from the root folder of this repository.\
+See the [License README](https://github.com/curityio/book-license-cli) for other options.
 
 ```bash
 ./resources/authorizationserver/license/download-license.sh
 ```
 
-Once the download completes, find the license file at the following location:
-
-```bash
-./resources/authorizationserver/license/license.json
-```
-
 ## Complete the Initial Setup
 
-Run to the admin UI at `https://localhost:6749/admin` and ignore certificate warnings due to the self-signed SSL certificate.\
-Sign in with user `admin` and the password from the docker compose file.\
+Go to the admin UI at `https://localhost:6749/admin` and ignore certificate warnings due to the self-signed SSL certificate.\
+Sign in with user `admin` and the password `Password1` (configured in the docker compose file).\
 Run the basic setup wizard, select `All options`, provide the license file and accept all other defaults.
 
 ![setup wizard](setup-wizard.png)

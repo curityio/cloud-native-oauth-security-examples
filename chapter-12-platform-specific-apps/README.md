@@ -42,7 +42,8 @@ Update your hosts file with the external IP address, similar to the following:
 ### Deploy the Authorization Server
 
 Deploy the authorization server with some preconfigured clients and users.\
-You will be prompted to download a license file for the particular authorization server we use:
+If required, the deployment gets a community edition license file for the Curity Identity Server.\
+See the [License README](https://github.com/curityio/book-license-cli) for details.
 
 ```bash
 ./3-deploy-authorization-server.sh

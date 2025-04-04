@@ -52,7 +52,9 @@ For example, on macOS use Keychain Access to add it to the system keystore:
 
 ### Deploy the Authorization Server
 
-Deploy the authorization server with some preconfigured clients and users:
+Deploy the authorization server with some preconfigured clients and users.\
+If required, the deployment gets a community edition license file for the Curity Identity Server.\
+See the [License README](https://github.com/curityio/book-license-cli) for details.
 
 ```bash
 ./3-deploy-authorization-server.sh
