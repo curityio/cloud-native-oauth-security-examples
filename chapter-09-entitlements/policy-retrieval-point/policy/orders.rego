@@ -16,8 +16,6 @@
 
 package orders
 
-import rego.v1
-
 #
 # Import volatile business permissions that map to the role in the access token
 # (business permissions are not part of the access token)

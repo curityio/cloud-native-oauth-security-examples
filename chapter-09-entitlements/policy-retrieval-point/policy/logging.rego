@@ -1,7 +1,5 @@
 package system.log
 
-import rego.v1
-
 #
 # Demonstrate adding token data to decision logs
 #
