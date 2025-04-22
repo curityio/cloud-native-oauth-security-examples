@@ -1,6 +1,7 @@
 # General
 .settings/
 .DS_Store
+.vscode/
 *democluster*
 *.jar
 *.tar.gz
