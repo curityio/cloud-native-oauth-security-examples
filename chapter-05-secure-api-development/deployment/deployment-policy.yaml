@@ -16,43 +16,43 @@ spec:
     spec:
       serviceAccountName: zerotrustapi
       containers:
-      - name: zerotrustapi
-        image: zerotrustapi:1.0.0
-        env:
-          - name: NODE_ENV
-            value: 'production'
-          - name: PORT
-            value: '8000'
-          - name: JWKS_URI
-            value: 'http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-anonymous/jwks'
-          - name: REQUIRED_JWT_ALGORITHM
-            value: 'ES256'
-          - name: 'REQUIRED_ISSUER'
-            value: 'https://login.democluster.example/oauth/v2/oauth-anonymous'
-          - name: 'REQUIRED_AUDIENCE'
-            value: 'api.example.com'
-          - name: 'REQUIRED_SCOPE'
-            value: 'retail/orders'
-          - name: 'AUTHORIZATION_STRATEGY'
-            value: 'policy'
-          - name: 'POLICY_ENDPOINT'
-            value: 'http://127.0.0.1:8181/v1/data/orders/allow'
+        - name: zerotrustapi
+          image: zerotrustapi:1.0.0
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "8000"
+            - name: JWKS_URI
+              value: "http://curity-idsvr-runtime-svc.authorizationserver:8443/oauth/v2/oauth-anonymous/jwks"
+            - name: REQUIRED_JWT_ALGORITHM
+              value: "ES256"
+            - name: "REQUIRED_ISSUER"
+              value: "https://login.democluster.example/oauth/v2/oauth-anonymous"
+            - name: "REQUIRED_AUDIENCE"
+              value: "api.example.com"
+            - name: "REQUIRED_SCOPE"
+              value: "retail/orders"
+            - name: "AUTHORIZATION_STRATEGY"
+              value: "policy"
+            - name: "POLICY_ENDPOINT"
+              value: "http://127.0.0.1:8181/v1/data/orders/allow"
       initContainers:
-      - name: policyengine
-        image: openpolicyagent/opa:0.69.0
-        restartPolicy: Always
-        args:
-          - "run"
-          - "--ignore=.*" # Ignore kubernetes specific files
-          - "--server"
-          - "--addr"
-          - "127.0.0.1:8181" # Listen on local interface
-          - "--set"
-          - "decision_logs.console=true" # Enable decision logs
-          - "--set" 
-          - "services.policyRetrievalPoint.url=http://policy-retrieval-point-svc" # Base-URL of server hosting the policy bundle
-          - "--set"
-          - "bundles.policyRetrievalPoint.resource=orders_bundle.tar.gz" # Path of the orders policy bundle on the server
-          - "--set"
-          - "bundles.policyRetrievalPoint.persist=false" # Keep policy in memory
-          - "--v1-compatible"
+        - name: policyengine
+          image: openpolicyagent/opa:1.3.0
+          restartPolicy: Always
+          args:
+            - "run"
+            - "--ignore=.*" # Ignore kubernetes specific files
+            - "--server"
+            - "--addr"
+            - "127.0.0.1:8181" # Listen on local interface
+            - "--set"
+            - "decision_logs.console=true" # Enable decision logs
+            - "--set"
+            - "services.policyRetrievalPoint.url=http://policy-retrieval-point-svc" # Base-URL of server hosting the policy bundle
+            - "--set"
+            - "bundles.policyRetrievalPoint.resource=orders_bundle.tar.gz" # Path of the orders policy bundle on the server
+            - "--set"
+            - "bundles.policyRetrievalPoint.persist=false" # Keep policy in memory
+            - "--v1-compatible"
