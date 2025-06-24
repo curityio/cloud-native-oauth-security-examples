@@ -18,6 +18,15 @@ kubectl create namespace kong
 kubectl label namespace kong name=kong
 
 #
+# Pull the latest Docker image to ensure no issues with old versions and LUA install dependencies
+#
+docker pull kong/kong:3.9-ubuntu
+if [ $? -ne 0 ]; then
+  echo 'Problem pulling the custom Kong docker image'
+  exit 1
+fi
+
+#
 # Build the custom docker image with plugin dependencies
 #
 docker build --no-cache -t custom-kong:1.0.0 .
