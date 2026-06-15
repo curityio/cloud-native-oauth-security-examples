@@ -45,11 +45,11 @@ spec:
             readOnly: true
           env:
             - name: POSTGRES_USER
-              value: idsvruser
+              value: postgres
             - name: POSTGRES_PASSWORD
               value: Password1
             - name: POSTGRES_DB
-              value: idsvrdb
+              value: idsvr
           ports:
             - containerPort: 5432
               name: postgres
