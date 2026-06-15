@@ -166,8 +166,8 @@ Both API requests are then authorized, and responses include different authorize
 
 The authorization rules are based on these data relationships:
 
-- [Dana's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/data-backup.sql#L339) has `customer_id=2099` and `role=customer`.
-- [Kims's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/data-backup.sql#L340) has a `role=admin` and `region=USA`.
+- [Dana's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/user-import.sql#5) has `customer_id=2099` and `role=customer`.
+- [Kims's user account](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/resources/authorizationserver/user-import.sql#L10) has a `role=admin` and `region=USA`.
 - The client requests an [order with an ID of 20882](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/chapter-12-platform-specific-apps/console-app/src/index.ts#L19).
 - The [order 20882 resource](https://github.com/curityio/cloud-native-oauth-security-examples/tree/main/chapter-05-secure-api-development/data/orderSummary.json#L11) has `customer_id=3044` and `region=USA`.
 - Dana is not authorized to access the order since it is for another customer.

@@ -50,11 +50,23 @@ if [ $? -ne 0 ]; then
 fi
 
 #
-# Create a configmap for the database schema of the authorization server
+# Copy in the latest schema creation script from the Curity Docker image
 #
-kubectl -n authorizationserver create configmap postgres-configmap --from-file='resources/postgres-schema.sql'
+docker pull curity.azurecr.io/curity/idsvr
+docker run --name curity -d -e PASSWORD=Password1 curity.azurecr.io/curity/idsvr
+docker cp curity:/opt/idsvr/etc/postgres-create_database.sql ./create-schema.sql
+docker rm --force curity 1>/dev/null
+if [ ! -f ./create-schema.sql ]; then
+  echo 'Problem encountered getting the schema creation script'
+  exit 1
+fi
+
+#
+# Create a configmap with the schema creation script
+# 
+kubectl -n authorizationserver create configmap postgres-configmap --from-file='create-schema.sql'
 if [ $? -ne 0 ]; then
-  echo '*** Problem encountered creating the postgres config map'
+  echo 'Problem encountered creating the postgres configmap'
   exit 1
 fi
 

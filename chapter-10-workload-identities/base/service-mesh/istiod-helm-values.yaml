@@ -1,13 +1,10 @@
-#########################################################################################
+##############################################################################################################
 # Parameters for the istiod Helm chart, which injects sidecars into workloads
 # - https://artifacthub.io/packages/helm/istio-official/istiod?modal=values
 #
-# Implement the technique from the istio-spire-config.yaml file:
-# - https://github.com/istio/istio/tree/master/samples/security/spire
-#
-# - Set the trust domain for the mesh
-# - Mount the SPIFFE CSI driver so that sidecars and the gateway receive SVIDs from SPIRE
-#########################################################################################
+# Integrate Istio with SPIRE, by mounting the CSI driver at the path from which Istio gets workload identities
+# - https://istio.io/latest/docs/ops/integrations/spire/#install-istio
+##############################################################################################################
 meshConfig:
   trustDomain: democluster.internal
 
@@ -15,6 +12,12 @@ sidecarInjectorWebhook:
   templates:
     spire: |
       spec:
+        initContainers:
+        - name: istio-proxy
+          volumeMounts:
+          - name: workload-socket
+            mountPath: /run/secrets/workload-spiffe-uds
+            readOnly: true
         volumes:
           - name: workload-socket
             csi:
