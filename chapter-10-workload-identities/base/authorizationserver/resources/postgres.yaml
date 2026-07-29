@@ -38,22 +38,22 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:17.6
+          image: postgres:18.4
           volumeMounts:
           - mountPath: /docker-entrypoint-initdb.d
-            name: init-script
+            name: init-scripts
             readOnly: true
           env:
             - name: POSTGRES_USER
-              value: idsvruser
+              value: postgres
             - name: POSTGRES_PASSWORD
               value: Password1
             - name: POSTGRES_DB
-              value: idsvrdb
+              value: idsvr
           ports:
             - containerPort: 5432
               name: postgres
       volumes:
-        - name: init-script
+        - name: init-scripts
           configMap:
             name: postgres-configmap

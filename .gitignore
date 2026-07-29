@@ -8,6 +8,7 @@
 *.crt
 download
 curlresponse.txt
+create-schema.sql
 
 # License downloads
 curity-book-cli*
@@ -44,5 +45,4 @@ resources/apigateway/helm-values.yaml
 
 ## SPIFFE
 chapter-10-workload-identities/base/authorizationserver/resources/signing*
-chapter-10-workload-identities/base/authorizationserver/resources/postgres-schema.sql
 !chapter-10-workload-identities/demoapi/gradle/wrapper/gradle-wrapper.jar

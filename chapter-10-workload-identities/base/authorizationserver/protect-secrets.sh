@@ -43,8 +43,8 @@ ADMIN_PASSWORD=$(openssl passwd -5 $ADMIN_PASSWORD_RAW)
 #
 # Plaintext database details
 #
-DB_NAME='idsvrdb'
-DB_USER='idsvruser'
+DB_NAME='idsvr'
+DB_USER='postgres'
 DB_PASSWORD_RAW='Password1'
 DB_CONNECTION_RAW="jdbc:postgresql://postgres-svc/$DB_NAME"
 
